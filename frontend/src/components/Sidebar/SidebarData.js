@@ -8,7 +8,7 @@ export const SidebarData = [
   {
     title: "Workers",
     role: ['Admin'],
-    icon: <FaIcons.FaPlaneDeparture />,
+    icon: <FaIcons.FaUserCog />,
     iconClosed: <RiIcons.RiArrowDownSFill />,
     iconOpened: <RiIcons.RiArrowUpSFill />,
  
@@ -28,18 +28,26 @@ export const SidebarData = [
     ],
   },
   {
-    title: "Tickets",
-    role: ['user'],
+    title: "Production",
+    role: ['Worker', 'User'],
+    icon: <FaIcons.FaUserCog />,
     iconClosed: <RiIcons.RiArrowDownSFill />,
     iconOpened: <RiIcons.RiArrowUpSFill />,
  
     subNav: [
       {
-        title: "Owned",
-        path: "/tickets/owned",
-        role: ['user']
-      }
-    ]
+        title: "Plan",
+        path: "/production/plan",
+        icon: <IoIcons.IoMdCreate />,
+        role: ['Worker']
+      },
+      {
+        title: "Search",
+        path: "/production/search",
+        icon: <IoIcons.IoIosSearch />,
+        role: ['User', 'Worker']
+      },
+    ],
   },
   {
     title: "Sign In",
@@ -57,6 +65,6 @@ export const SidebarData = [
     title: "Sign Out",
     path: "/signout",
     cName: "nav-text",
-    role: ["Admin", "User", "Staff"]
+    role: ["Admin", "User", "Worker"]
 }
 ];

@@ -6,6 +6,8 @@ import Sidebar from "./components/Sidebar/Sidebar";
 import Signin from "./pages/signin/Signin";
 import Signout from "./utils/Signout";
 
+import WorkerCreate from "./pages/workers/create/WorkerCreate";
+
 
 
 function App() {
@@ -16,7 +18,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Signin />}></Route>
           <Route path="/signin" element={<Signin />}></Route>
-          {/* <Route path="/signup" element={<Signup />}></Route> */}
+          <Route path="/worker/create" element={<WorkerCreate />}></Route>
           <Route path="/signout" element={<Signout/>}></Route>
         </Routes>
       </BrowserRouter>

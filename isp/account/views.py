@@ -4,9 +4,13 @@ from rest_framework import viewsets, permissions, generics, status
 from rest_framework.response import Response
 from django.contrib.auth.models import User, Group, AnonymousUser
 from rest_framework.views import APIView
-
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
+
+class IsAdmin(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user and request.user.groups.values_list('name', flat = True)[0] == 'Admin'
 
 class TestViewSet(viewsets.ModelViewSet):
     queryset = Test.objects.all()
@@ -58,6 +62,14 @@ class RegisterUserViewSet(generics.CreateAPIView):
     #     return Response("yo")
     def post(self, request):
         return post_new_user(request, Group.objects.get(name="User"), True, False, True)
+
+class RegisterWorkerViewSet(APIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated, IsAdmin]
+
+    def post(self, request):
+        return post_new_user(request, Group.objects.get(name="Worker"), True, False, True)
 
 
 def post_new_user(request, group, is_active, is_superuser, is_staff):
