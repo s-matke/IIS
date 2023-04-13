@@ -19,6 +19,19 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'email', 'password', 'first_name', 'last_name', 'account', 'groups']
 
+class UserSerializerNew(serializers.ModelSerializer):
+    account = AccountSerializer(read_only = True)
+    groups = serializers.SlugRelatedField(
+        many = True,
+        read_only = True,
+        slug_field='name'
+    )
+
+    class Meta:
+        model = User
+        read_only_fields = ['email']
+        fields = ['id', 'email', 'password', 'first_name', 'last_name', 'account', 'groups']
+
 class UserRegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
         required = True,

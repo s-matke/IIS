@@ -1,8 +1,9 @@
 from account.models import Test, Account
-from account.serializers import TestSerializer, AccountSerializer, UserSerializer, UserRegisterSerializer
+from account.serializers import TestSerializer, AccountSerializer, UserSerializer, UserRegisterSerializer, UserSerializerNew
 from rest_framework import viewsets, permissions, generics, status
 from rest_framework.response import Response
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group, AnonymousUser
+from rest_framework.views import APIView
 
 
 # Create your views here.
@@ -38,6 +39,16 @@ class ListUserViewSet(generics.ListAPIView):
         serialized_users = UserSerializer(instance=queryset, many=True)
         return Response(serialized_users.data)
     
+
+class CurrentUserView(APIView):
+    def get(self, request):
+        if isinstance(request.user, AnonymousUser) == True:
+            return Response(status=404)
+        else:
+            serializer = UserSerializerNew(request.user)
+            return Response(serializer.data)
+
+
 class RegisterUserViewSet(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -66,3 +77,4 @@ def post_new_user(request, group, is_active, is_superuser, is_staff):
     account_serializer.instance = instance.account
     account_serializer.save()
     return Response(account_serializer.data, status=status.HTTP_201_CREATED)
+
