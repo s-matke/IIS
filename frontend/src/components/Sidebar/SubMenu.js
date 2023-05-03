@@ -76,7 +76,7 @@ const SubMenu = ({ item }) => {
       </SidebarLink>
       {subnav && 
         item.subNav.map((item, index) => {
-            if (item.role.includes(userRole)) {
+            if (item.role.some(r => userRole.includes(r))) {
                 return (
                     <DropdownLink to={item.path} key={index}>
                         {item.icon}

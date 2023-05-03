@@ -13,7 +13,9 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         refresh = self.get_token(self.user)
         account = Account.objects.get(user__id=self.user.id)
         refresh['user_id'] = account.id
-
+        refresh['groups'] = list(self.user.groups.values_list('name', flat=True))
+        # refresh['groups'] = 
+        # print(self.user.groups.values_list('name', flat = True))
         data['refresh'] = str(refresh)
         data['access'] = str(refresh.access_token)
         return data

@@ -79,8 +79,11 @@ const Sidebar = () => {
             </NavIcon>
             {SidebarData.map((item, index) => {
                 console.log(item.role);
-                if (item.role.includes(userRole)) {
-                    return <SubMenu item={item} key={index} />;
+                // if (item.role.includes(userRole)) {
+                //     return <SubMenu item={item} key={index} />;
+                // }
+                if (item.role.some(r => userRole.includes(r))) {
+                  return <SubMenu item={item} key={index} />;
                 }
             })}
           </SidebarWrap>

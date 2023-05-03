@@ -29,7 +29,7 @@ export const SidebarData = [
   },
   {
     title: "Production",
-    role: ['Worker', 'User'],
+    role: ['Worker', 'User', 'Plan Manager'],
     icon: <FaIcons.FaUserCog />,
     iconClosed: <RiIcons.RiArrowDownSFill />,
     iconOpened: <RiIcons.RiArrowUpSFill />,
@@ -39,13 +39,13 @@ export const SidebarData = [
         title: "Plan",
         path: "/production/plan",
         icon: <IoIcons.IoMdCreate />,
-        role: ['Worker']
+        role: ['Worker', 'Plan Manager']
       },
       {
         title: "Search",
         path: "/production/search",
         icon: <IoIcons.IoIosSearch />,
-        role: ['User', 'Worker']
+        role: ['User', 'Worker', 'Plan Manager']
       },
     ],
   },
@@ -65,6 +65,6 @@ export const SidebarData = [
     title: "Sign Out",
     path: "/signout",
     cName: "nav-text",
-    role: ["Admin", "User", "Worker"]
+    role: ["Admin", "User", "Worker", "Plan Manager"]
 }
 ];

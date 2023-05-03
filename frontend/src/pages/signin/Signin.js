@@ -23,6 +23,7 @@ import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
+import jwt from 'jwt-decode';
 
 
 function Signin() {
@@ -70,13 +71,15 @@ function Signin() {
                     toast.success('Logged in!', {
                         position: toast.POSITION.TOP_CENTER
                     });
+                    const tokenDecoded = jwt(res.data['access'])
                     localStorage.setItem('access-token', res.data['access'])
                     localStorage.setItem('refresh-token', res.data['refresh'])
-                    
-                    console.log("AUTHHHHH")
-                    console.log(user)
-
-                    authMeFunc()                    
+                    localStorage.setItem('userId', tokenDecoded.user_id)
+                    localStorage.setItem('role', JSON.stringify(tokenDecoded.groups))
+                                        
+                    navigate("/home")
+                    navigate(0)
+                    // authMeFunc()                    
                 }
             })
             .catch(error => {
