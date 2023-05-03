@@ -1,8 +1,23 @@
 from .models import Test, Account
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+
+        refresh = self.get_token(self.user)
+        account = Account.objects.get(user__id=self.user.id)
+        refresh['user_id'] = account.id
+
+        data['refresh'] = str(refresh)
+        data['access'] = str(refresh.access_token)
+        return data
+
 
 class TestSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -13,6 +28,11 @@ class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = ['id', 'address', 'city', 'country', 'phone', 'user_id', 'salary']
+
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ['name']
     
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

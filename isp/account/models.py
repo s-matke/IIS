@@ -26,8 +26,8 @@ class Account(models.Model):
                "\naddress: " + self.address + \
                "\ncity: " + self.city + \
                "\ncountry: " + self.country + \
-               "\nphone: " + self.phone + \
-               "\nsalary: " + self.salary
+               "\nphone: " + self.phone
+            #    "\nsalary: " + self.salary
 
 @receiver(post_save, sender=User)
 def create_account(sender, instance, created, **kwargs):
