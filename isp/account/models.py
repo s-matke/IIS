@@ -21,13 +21,13 @@ class Account(models.Model):
     phone = models.CharField(max_length=20, null=True, blank=True)
     salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
-    def __str__(self) -> str:
-        return "id: " + str(self.id) + \
-               "\naddress: " + self.address + \
-               "\ncity: " + self.city + \
-               "\ncountry: " + self.country + \
-               "\nphone: " + self.phone
-            #    "\nsalary: " + self.salary
+    # def __str__(self) -> str:
+    #     return "id: " + str(self.id) + \
+    #            "\naddress: " + self.address + \
+    #            "\ncity: " + self.city + \
+    #            "\ncountry: " + self.country + \
+    #            "\nphone: " + self.phone
+    #         #    "\nsalary: " + self.salary
 
 @receiver(post_save, sender=User)
 def create_account(sender, instance, created, **kwargs):

@@ -87,9 +87,9 @@ def post_new_user(request, group, is_active, is_superuser, is_staff):
     if not user_serializer.is_valid() or not account_serializer.is_valid() or not group_serializer.is_valid():
         return Response(user_serializer.errors if not user_serializer.is_valid() else account_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    group = ''
     if not is_group_exists(group_serializer.data['name']):
         group = create_group(group_serializer.data['name'])
+    group = group_serializer.data['name']
 
     
     instance = user_serializer.save()

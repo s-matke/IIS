@@ -18,5 +18,5 @@ urlpatterns = [
 ]
 
 router = DefaultRouter()
-router.register('', TestViewSet)
+router.register('account/', TestViewSet)
 urlpatterns += router.urls

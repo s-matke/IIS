@@ -50,6 +50,50 @@ export const SidebarData = [
     ],
   },
   {
+    title: "Product",
+    role: ['Worker', 'Plan Manager'],
+    icon: <FaIcons.FaCarBattery />,
+    iconClosed: <RiIcons.RiArrowDownSFill />,
+    iconOpened: <RiIcons.RiArrowUpSFill />,
+ 
+    subNav: [
+      {
+        title: "Add",
+        path: "/product/create",
+        icon: <IoIcons.IoMdCreate />,
+        role: ['Worker', 'Plan Manager']
+      },
+      {
+        title: "Search",
+        path: "/product/search",
+        icon: <IoIcons.IoIosSearch />,
+        role: ['User', 'Worker', 'Plan Manager']
+      },
+    ],
+  },
+  {
+    title: "Material",
+    role: ['Worker', 'Plan Manager'],
+    icon: <FaIcons.FaTools />,
+    iconClosed: <RiIcons.RiArrowDownSFill />,
+    iconOpened: <RiIcons.RiArrowUpSFill />,
+ 
+    subNav: [
+      {
+        title: "Add",
+        path: "/material/create",
+        icon: <IoIcons.IoMdCreate />,
+        role: ['Worker', 'Plan Manager']
+      },
+      {
+        title: "Search",
+        path: "/material/search",
+        icon: <IoIcons.IoIosSearch />,
+        role: ['User', 'Worker', 'Plan Manager']
+      },
+    ],
+  },
+  {
     title: "Sign In",
     path: "/signin",
     role: ['guest'],

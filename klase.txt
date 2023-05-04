@@ -1,0 +1,28 @@
+Proizvod:
+	- Id
+	- Naziv
+	- Datum dodavanja
+	- Validnost
+	- (Prosecno) trajanje proizovdnje
+	- Cena proizvodnje
+
+Materijal:
+	- Id
+	- Naziv
+	- Opis
+	- Cena
+	- Dobavljac
+	- Datum dodavanja
+	- Kategorija? (metal, plastika, itd.)
+
+Bill of materials (BOM):
+	- Id
+	- Proizvod Id
+	- Materijal Id
+
+Plan proizvodnje:
+	- Proizvod Id
+	- Kolicina koja se proizvodi
+	- Vremenski okvir: Pocetak i kraj proizovdnje
+	- Ukupna kolicina potrebnog materijala
+	- Ukupna cena
