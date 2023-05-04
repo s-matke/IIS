@@ -9,22 +9,46 @@ import { ToastContainer, toast } from 'react-toastify';
 
 function ProductCreate() {
 
-    const navigate = useNavigate()
-    
+    const navigate = useNavigate()  
     const [product, setProduct] = useState(
         {
             name: "",
             status: "",
             lead_time: "",
-            price_of_producing: "",
-            planner: localStorage.getItem('userId')
+            planner: localStorage.getItem('userId'),
+            materials: ""
         }
     )
-  
+    const [materialOptions, setMaterialOptions] = useState([])
+    const [selectedMaterials, setSelectedMaterials] = useState([])
+
     const statusOptions = [
         { value: "IP", label: "In Production"},
         { value: "OP", label: "Out Of Production"}
     ]
+
+    useEffect(()=>{
+        if (!localStorage.getItem('access-token')){
+          navigate("/")
+        }
+        loadMaterials(); 
+    },[])
+
+    const loadMaterials = async() =>{
+        const result=await axios.get("http://localhost:8000/material/", {
+          headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('access-token')
+          }})
+          .then(res => {
+            
+            const materialsList = res.data.map(material => ({
+                label: material.name,
+                value: material.id,
+              }));
+
+            setMaterialOptions(materialsList)
+          })
+    }
 
     const submitProduct = async (e) => {
         e.preventDefault();
@@ -39,39 +63,39 @@ function ProductCreate() {
 
         if (flag) return;
 
-        axios.post(`http://localhost:8000/product/`, product, {
-            headers: {
-              'Authorization': 'Bearer ' + localStorage.getItem('access-token')
-            }})
-            .then(res => {
-                toast.success('Successfully added new product!', {
-                    position: toast.POSITION.TOP_CENTER
-                });
-                console.log(res);
-                console.log(res.data);
-                navigate("/product/search");
-            })
-            .catch(error => {
-                toast.error('Something went wrong!', {
-                    position: toast.POSITION.TOP_CENTER
-                })
-                console.log(error);
-            })
+        navigate('/product/create/bom',
+        {
+        state: {
+            data: product
+        }
+        })
     }
 
-    console.log(product)
-
     const onInputChange = (e) => {
-        console.log(e)
-        console.log("---------------")
         setProduct({...product, [e.target.name]: e.target.value});
     }
 
     const onSelectChange = (e) => {
-        console.log(e)
         setProduct({...product, ['status']: e.value})
     }
 
+    const onMultiSelectChange = (e) => {
+        console.log(e)
+
+        // const selectedMaterialList = e.map(material => ({
+        //     id: material.value,
+        //     name: material.label
+        // }))
+        
+        const selectedMaterialList = e.map(material => ({
+            id: material.value,
+            name: material.label
+        }))
+
+        setSelectedMaterials(selectedMaterialList)
+        setProduct({...product, ['materials']: selectedMaterialList})
+    }
+    console.log(product)
     return(
         <div className="container position-relative">
             <div className="row">
@@ -113,6 +137,23 @@ function ProductCreate() {
                             </div>
                         </div>
                         <div className="mb-4">
+                            <label htmlFor="attendance" className="form-label">
+                                Materials:
+                            </label>
+                            <div className="dropdown-container">
+                                <Select
+                                    required
+                                    options={materialOptions}
+                                    name="materials"
+                                    placeholder="Choose materials"
+                                    onChange={(e) => onMultiSelectChange(e)}
+                                    isSearchable={true}
+                                    isMulti
+                                    isClearable
+                                />
+                            </div>
+                        </div>
+                        <div className="mb-4">
                             <label htmlFor="lead_time" className="form-label">
                                 Lead time:
                             </label>
@@ -133,29 +174,9 @@ function ProductCreate() {
                                 </div>
                             </div>
                         </div>
-                        <div className="mb-4">
-                            <label htmlFor="price_of_producing" className="form-label">
-                                Price of producing:
-                            </label>
-                            <div className="input-group">
-                                <input
-                                    type={"number"}
-                                    min="0"
-                                    step="0.01"
-                                    className="form-control"
-                                    placeholder="Price..."
-                                    name="price_of_producing"
-                                    onChange={(e) => onInputChange(e)}
-                                    required
-                                    />
-                                <div className="input-group-append">
-                                    <span className="input-group-text" id="basic-addon2">€</span>
-                                </div>
-                            </div>
-                        </div>
                         <button type="submit" className="btn btn-outline-primary" 
                                 style={{'width':'150px', 'height':'50px', 'margin-left':'39%', 'margin-top':'15px'}}>
-                        Submit
+                        Continue
                         </button>
                     </form>
                 </div>

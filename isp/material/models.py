@@ -13,7 +13,7 @@ class Material(models.Model):
 class BillOfMaterial(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     material = models.ForeignKey(Material, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField(blank=True, default=0)
 
     class Meta:
         unique_together = ('product', 'material')

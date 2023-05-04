@@ -11,6 +11,7 @@ import ProductCreate from "./pages/product/create/ProductCreate";
 import ProductSearch from "./pages/product/search/ProductSearch";
 import MaterialCreate from "./pages/material/create/MaterialCreate";
 import MaterialSearch from "./pages/material/search/MaterialSearch";
+import BillOfMaterialCreate from "./pages/product/create/BillOfMaterialCreate";
 
 function App() {
   return (
@@ -20,10 +21,12 @@ function App() {
         <Routes>
           <Route path="/" element={<Signin />}></Route>
           <Route path="/signin" element={<Signin />}></Route>
+          <Route path="/login" element={<Signin />}></Route>
           <Route path="/worker/create" element={<WorkerCreate />}></Route>
           <Route path="/signout" element={<Signout/>}></Route>
           <Route path="/product/create" element={<ProductCreate />}></Route>
           <Route path="/product/search" element={<ProductSearch />}></Route>
+          <Route path="/product/create/bom" element={<BillOfMaterialCreate />}></Route>
           <Route path="/material/create" element={<MaterialCreate />}></Route>
           <Route path="/material/search" element={<MaterialSearch />}></Route>
         </Routes>

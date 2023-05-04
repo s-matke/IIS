@@ -9,4 +9,4 @@ class MaterialSerializer(serializers.ModelSerializer):
 class BillOfMaterialSerializer(serializers.ModelSerializer):
     class Meta:
         model = BillOfMaterial
-        fields = ['id', 'product_id', 'material_id', 'quantity']
+        fields = ['id', 'product', 'material', 'quantity']
