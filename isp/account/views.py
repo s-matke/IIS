@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from .validators import is_group_exists
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import CustomTokenObtainPairSerializer
+from django.db import transaction, DatabaseError
 
 # Create your views here.
 
@@ -82,24 +83,29 @@ def create_group(group):
 def post_new_user(request, group, is_active, is_superuser, is_staff):
     user_serializer = UserRegisterSerializer(data=request.data)
     account_serializer = AccountSerializer(data=request.data)
-    group_serializer = GroupSerializer(data=request.data)
 
-    if not user_serializer.is_valid() or not account_serializer.is_valid() or not group_serializer.is_valid():
+    if not user_serializer.is_valid() or not account_serializer.is_valid():
         return Response(user_serializer.errors if not user_serializer.is_valid() else account_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    if not is_group_exists(group_serializer.data['name']):
-        group = create_group(group_serializer.data['name'])
-    group = group_serializer.data['name']
-
+    group_name = request.data["group"]
+    group = Group()
+    if not is_group_exists(group_name):
+        group = create_group(group_name)
+    else:
+        group = Group.objects.filter(name=group_name).get()
     
-    instance = user_serializer.save()
-    instance.groups.add(group)
-    instance.is_superuser = is_superuser
-    instance.is_staff = is_staff
-    instance.is_active = is_active
-    instance.save()
+    try:
+        with transaction.atomic():
+            instance = user_serializer.save()
+            instance.groups.add(group)
+            instance.is_superuser = is_superuser
+            instance.is_staff = is_staff
+            instance.is_active = is_active
+            instance.save()
 
-    account_serializer.instance = instance.account
-    account_serializer.save()
-    return Response(account_serializer.data, status=status.HTTP_201_CREATED)
-
+            account_serializer.instance = instance.account
+            account_serializer.save()
+            return Response(account_serializer.data, status=status.HTTP_201_CREATED)
+    except DatabaseError:
+        print("db error")
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)

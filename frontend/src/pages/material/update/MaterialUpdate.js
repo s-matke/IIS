@@ -1,13 +1,16 @@
 import axios from "axios";
 import { toInteger } from "lodash";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import Select from "react-select";
 import { RiSurveyLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 
-function MaterialCreate() {
+function MaterialUpdate() {
+
+    const params = useParams()
+    const materialId = params.id;
 
     const navigate = useNavigate()
     
@@ -22,10 +25,28 @@ function MaterialCreate() {
         }
     )
   
-    const statusOptions = [
-        { value: "IP", label: "In Materialion"},
-        { value: "OP", label: "Out Of Materialion"}
-    ]
+    useEffect(()=>{
+        if (!localStorage.getItem('access-token')){
+          navigate("/")
+        }
+        loadMaterial();
+    },[])
+
+    const loadMaterial = async() =>{
+        const result=await axios.get("http://localhost:8000/material/" + materialId, {
+          headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('access-token')
+          }})
+          .then(res => {
+            setMaterial(res.data)
+          })
+          .catch(error => {
+            toast.error("Couldn't retrieve material! Try again later.", {
+                position: toast.POSITION.TOP_CENTER
+            })
+            console.log(error);
+        })
+    }
 
     const submitMaterial = async (e) => {
         e.preventDefault();
@@ -47,12 +68,12 @@ function MaterialCreate() {
 
         if (flag) return;
 
-        axios.post(`http://localhost:8000/material/`, material, {
+        axios.put(`http://localhost:8000/material/` + materialId, material, {
             headers: {
               'Authorization': 'Bearer ' + localStorage.getItem('access-token')
             }})
             .then(res => {
-                toast.success('Successfully added new material!', {
+                toast.success('Successfully updated material!', {
                     position: toast.POSITION.TOP_CENTER
                 });
                 console.log(res);
@@ -67,17 +88,8 @@ function MaterialCreate() {
             })
     }
 
-    console.log(material)
-
     const onInputChange = (e) => {
-        console.log(e)
-        console.log("---------------")
         setMaterial({...material, [e.target.name]: e.target.value});
-    }
-
-    const onSelectChange = (e) => {
-        console.log(e)
-        setMaterial({...material, ['status']: e.value})
     }
 
     return(
@@ -101,6 +113,7 @@ function MaterialCreate() {
                                     className="form-control"
                                     placeholder="Name..."
                                     name="name"
+                                    value={material.name}
                                     onChange={(e) => onInputChange(e)}
                                     required
                                     />
@@ -113,6 +126,7 @@ function MaterialCreate() {
                                     maxLength={200}
                                     type={"text"} 
                                     name="description"
+                                    value={material.description}
                                     placeholder="Description..." 
                                     onChange={(e) => onInputChange(e)}
                                     required
@@ -129,6 +143,7 @@ function MaterialCreate() {
                                     step="0.01"
                                     className="form-control"
                                     placeholder="Price..."
+                                    value={material.price}
                                     name="price"
                                     onChange={(e) => onInputChange(e)}
                                     required
@@ -148,6 +163,7 @@ function MaterialCreate() {
                                     className="form-control"
                                     maxLength={30}
                                     placeholder="Supplier..."
+                                    value={material.supplier}
                                     name="supplier"
                                     onChange={(e) => onInputChange(e)}
                                     required
@@ -163,6 +179,7 @@ function MaterialCreate() {
                                     type={"number"}
                                     className="form-control"
                                     min="0"
+                                    value={material.min_amount}
                                     placeholder="Min amount..."
                                     name="min_amount"
                                     onChange={(e) => onInputChange(e)}
@@ -174,6 +191,7 @@ function MaterialCreate() {
                                     className="form-control"
                                     min="0"
                                     placeholder="Max amount..."
+                                    value={material.max_amount}
                                     name="max_amount"
                                     onChange={(e) => onInputChange(e)}
                                     required
@@ -192,4 +210,4 @@ function MaterialCreate() {
 
 }
 
-export default MaterialCreate;
+export default MaterialUpdate;

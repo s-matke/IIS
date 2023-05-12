@@ -51,7 +51,7 @@ export const SidebarData = [
   },
   {
     title: "Product",
-    role: ['Worker', 'Plan Manager'],
+    role: ['Worker', 'Plan Manager', 'Inventory Manager'],
     icon: <FaIcons.FaCarBattery />,
     iconClosed: <RiIcons.RiArrowDownSFill />,
     iconOpened: <RiIcons.RiArrowUpSFill />,
@@ -61,19 +61,19 @@ export const SidebarData = [
         title: "Add",
         path: "/product/create",
         icon: <IoIcons.IoMdCreate />,
-        role: ['Worker', 'Plan Manager']
+        role: ['Worker', 'Inventory Manager']
       },
       {
         title: "Search",
         path: "/product/search",
         icon: <IoIcons.IoIosSearch />,
-        role: ['User', 'Worker', 'Plan Manager']
+        role: ['User', 'Worker', 'Plan Manager', 'Inventory Manager']
       },
     ],
   },
   {
     title: "Material",
-    role: ['Worker', 'Plan Manager'],
+    role: ['Worker', 'Plan Manager', 'Inventory Manager'],
     icon: <FaIcons.FaTools />,
     iconClosed: <RiIcons.RiArrowDownSFill />,
     iconOpened: <RiIcons.RiArrowUpSFill />,
@@ -83,13 +83,13 @@ export const SidebarData = [
         title: "Add",
         path: "/material/create",
         icon: <IoIcons.IoMdCreate />,
-        role: ['Worker', 'Plan Manager']
+        role: ['Worker', 'Inventory Manager']
       },
       {
         title: "Search",
         path: "/material/search",
         icon: <IoIcons.IoIosSearch />,
-        role: ['User', 'Worker', 'Plan Manager']
+        role: ['User', 'Worker', 'Plan Manager', 'Inventory Manager']
       },
     ],
   },
@@ -109,6 +109,6 @@ export const SidebarData = [
     title: "Sign Out",
     path: "/signout",
     cName: "nav-text",
-    role: ["Admin", "User", "Worker", "Plan Manager"]
+    role: ["Admin", "User", "Worker", "Plan Manager", 'Inventory Manager']
 }
 ];

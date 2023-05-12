@@ -23,6 +23,8 @@ import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import Select from "react-select";
+
 
 function WorkerCreate() {
 
@@ -37,9 +39,16 @@ function WorkerCreate() {
             address: "",
             city: "",
             country: "",
-            salary: ""
+            salary: "",
+            group: ""
         }
     )
+
+    const groupOptions = [
+        { value: "Inventory Manager", label: "Inventory Manager"},
+        { value: "Plan Manager", label: "Plan Manager"},
+        { value: "Production Manager", label: "Production Manager"}
+    ]
 
     const submitUser = (e) => {
         e.preventDefault();
@@ -76,9 +85,15 @@ function WorkerCreate() {
         setUser({...user, [e.target.name]: e.target.value});
     }
 
+    const onSelectChange = (e) => {
+        setUser({...user, ['group']: e.value})
+    }
+
     const onPhoneChange = (e) => {
         setUser({...user, ["phone"]: e})
     }
+
+    console.log(user)
 
     return (
     <MDBContainer fluid>
@@ -185,8 +200,21 @@ function WorkerCreate() {
                                     </div>
                                 </div>
                                 <div className="mb-4">
-                                    <div className="input-group">
-                                            <MDBCol md='6' lg='12'>
+                                    <div className="input-group dropdown-container">
+                                        <MDBRow>
+                                            <MDBCol md='6'>
+
+                                                <Select
+                                                    required
+                                                    options={groupOptions}
+                                                    name="name"
+                                                    placeholder="Choose group"
+                                                    onChange={(e) => onSelectChange(e)}
+                                                    isSearchable={false}
+                                                    />
+                                            </MDBCol>
+
+                                            <MDBCol md='6'>
                                                 <MDBInput 
                                                     label='Salary' 
                                                     name="salary" 
@@ -194,6 +222,7 @@ function WorkerCreate() {
                                                     onChange={(e) => onInputChange(e)}
                                                     required/>
                                             </MDBCol>
+                                        </MDBRow>
                                     </div>
                                 </div>
                                 <div className='mb-4'>

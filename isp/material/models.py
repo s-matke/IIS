@@ -8,7 +8,8 @@ class Material(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False)
     supplier = models.CharField(max_length=70, null=True, blank=True)
     created = models.DateField(auto_now_add=True)
-
+    min_amount = models.PositiveIntegerField(blank=False, default=0, null=False)
+    max_amount = models.PositiveIntegerField(blank=False, default=1, null=False)
 
 class BillOfMaterial(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

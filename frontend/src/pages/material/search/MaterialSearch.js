@@ -46,7 +46,9 @@ export default function MaterialSearch() {
     }
 
   const handleRowClick = async (data) => {
-    navigate('/', // update page TODO
+    const material_id = data["id"]
+    
+    navigate('/material/update/' + material_id,
     {
       state: {
         data
@@ -57,7 +59,7 @@ export default function MaterialSearch() {
   return (
     <div className='container'>
         <div className='py-4' style={{'width':'75%','margin-left':'280px'}}>
-          <input type="text" name="name" value={query} className="form-control" onChange={(e)=>handleSearch(e)} placeholder="Search..."/><br/>
+          <input type="text" name="name" autoComplete='off' value={query} className="form-control" onChange={(e)=>handleSearch(e)} placeholder="Search..."/><br/>
           <table className="table table-hover border rounded p-4 mt-2 shadow table-striped" style={{'cursor': 'pointer'}}>
             <thead>
               <tr className='table-dark'>

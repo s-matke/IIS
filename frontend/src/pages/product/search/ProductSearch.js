@@ -45,7 +45,9 @@ export default function ProductSearch() {
   }
 
   const handleRowClick = async (data) => {
-    navigate('/', // update page TODO
+    const product_id = data["id"]
+    
+    navigate('/product/update/' + product_id, // update page TODO
     {
       state: {
         data
@@ -56,7 +58,7 @@ export default function ProductSearch() {
   return (
     <div className='container'>
         <div className='py-4' style={{'width':'75%','margin-left':'280px'}}>
-        <input type="text" name="name" value={query} className="form-control" onChange={(e)=>handleSearch(e)} placeholder="Search..."/><br/>
+        <input type="text" name="name" value={query} autoComplete='off' className="form-control" onChange={(e)=>handleSearch(e)} placeholder="Search..."/><br/>
         <table className="table table-hover border rounded p-4 mt-2 shadow table-striped" style={{'cursor': 'pointer'}}>
   <thead>
     <tr className='table-dark'>
@@ -66,7 +68,7 @@ export default function ProductSearch() {
       <th scope="col">STATUS</th>
       <th scope="col">LEAD TIME</th>
       <th scope="col">PRICE</th>
-      <th scope="col">PLANNER</th>
+      <th scope="col">WORKER</th>
     </tr>
   </thead>
   <tbody>
