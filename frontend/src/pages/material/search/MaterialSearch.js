@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
+import AuthContext from "../../../store/production/AuthContext";
 
 export default function MaterialSearch() {
 
@@ -8,18 +9,16 @@ export default function MaterialSearch() {
     const [filterData,setFilterData]=useState([])
     const[query,setQuery]=useState('')
     const navigate = useNavigate();
-    
+    const context = useContext(AuthContext);
+
     useEffect(()=>{
-        if (!localStorage.getItem('access-token')){
-          navigate("/login")
-        }
         loadMaterials(); 
     },[])
 
     const loadMaterials=async()=>{
         const result=await axios.get("http://localhost:8000/material/", {
           headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('access-token')
+            'Authorization': 'Bearer ' + context.token
           }})
         setMaterials(result.data);
         setFilterData(result.data);

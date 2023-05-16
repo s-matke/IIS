@@ -1,25 +1,24 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
+import AuthContext from "../../../store/production/AuthContext";
 
 export default function ProductSearch() {
 
+    const context = useContext(AuthContext)
     const [products,setProducts]=useState([])
     const [filterData,setFilterData]=useState([])
     const[query,setQuery]=useState('')
     const navigate = useNavigate();
     
     useEffect(()=>{
-        if (!localStorage.getItem('access-token')){
-          navigate("/login")
-        }
         loadProducts(); 
     },[])
 
     const loadProducts=async()=>{
         const result=await axios.get("http://localhost:8000/product/", {
           headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('access-token')
+            'Authorization': 'Bearer ' + context.token
           }})
         setProducts(result.data);
         setFilterData(result.data);

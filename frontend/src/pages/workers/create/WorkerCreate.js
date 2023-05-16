@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import { 
   MDBBtn, 
@@ -24,10 +24,11 @@ import { useNavigate } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import Select from "react-select";
-
+import AuthContext from "../../../store/production/AuthContext";
 
 function WorkerCreate() {
 
+    const context = useContext(AuthContext);
     const navigate = useNavigate();
     const [user, setUser] = useState(
         {
@@ -54,7 +55,7 @@ function WorkerCreate() {
         e.preventDefault();
         axios.post(`http://localhost:8000/worker/create/`, user, {
             headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('access-token')
+                'Authorization': 'Bearer ' + context.token
             }
         })
             .then(res => {

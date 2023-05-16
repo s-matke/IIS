@@ -20,6 +20,10 @@ class IsManager(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.user and request.user.groups.values_list('name', flat = True)[0] in ['Plan Manager', 'Inventory Manager']
 
+class IsAdmin(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user and request.user.groups.values_list('name', flat = True)[0] == 'Admin'
+
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -27,7 +31,8 @@ class ProductViewSet(viewsets.ModelViewSet):
 class ProductAPIViewSet(APIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [IsAuthenticated, IsManager]
+    permission_classes = [IsAuthenticated & (IsManager | IsAdmin)]
+
 
     def get(self, request):
         products = self.queryset.all()

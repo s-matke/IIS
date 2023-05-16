@@ -1,6 +1,6 @@
 import axios from "axios";
 import { toInteger } from "lodash";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
 import Select from "react-select";
 import { RiSurveyLine } from "react-icons/ri";
@@ -8,13 +8,15 @@ import { Link } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import React from 'react';
 import Button from 'react-bootstrap/Button';
+import AuthContext from "../../../store/production/AuthContext";
 
 
 function ProductUpdate(props) {
     const params = useParams()
     const productId = params.id;
 
-    const navigate = useNavigate()  
+    const navigate = useNavigate()
+    const context = useContext(AuthContext)
     const [product, setProduct] = useState(
         {
             name: "",
@@ -35,9 +37,6 @@ function ProductUpdate(props) {
     ]
 
     useEffect(()=>{
-        if (!localStorage.getItem('access-token')){
-          navigate("/")
-        }
         loadProduct(); 
         loadMaterials();
     },[])
@@ -45,16 +44,9 @@ function ProductUpdate(props) {
     const loadProduct = async() =>{
         const result=await axios.get("http://localhost:8000/product/" + productId, {
           headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('access-token')
+            'Authorization': 'Bearer ' + context.token
           }})
           .then(res => {
-            // console.log(res.data)
-
-            // const materialsList = res.data.bom.map(material => ({
-            //     label: material.material_name,
-            //     value: material.material,
-            //     quantity: material.quantity
-            //   }));
 
             const selectedMaterialList = res.data.bom.map(material => ({
                 id: material.material,
@@ -62,7 +54,6 @@ function ProductUpdate(props) {
                 quantity: (material.quantity || 0)
             }))
             
-            // console.log(res.data)
             const productTmp = {
                     name: res.data['name'],
                     status: res.data['status'],
@@ -70,7 +61,6 @@ function ProductUpdate(props) {
                     materials: selectedMaterialList
             }
 
-            // console.log(statusOptions.at([res.data['status']]).label)
             const tmpStatus = 
                 { label: statusOptions.at([res.data['status']]).label, value: res.data['status'],}
             setSelectedStatus(tmpStatus)
@@ -84,7 +74,7 @@ function ProductUpdate(props) {
     const loadMaterials = async() =>{
         const result=await axios.get("http://localhost:8000/material", {
           headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('access-token')
+            'Authorization': 'Bearer ' + context.token
           }})
           .then(res => {
           
@@ -125,7 +115,7 @@ function ProductUpdate(props) {
 
         axios.delete(`http://localhost:8000/product/` + productId, {
             headers: {
-              'Authorization': 'Bearer ' + localStorage.getItem('access-token')
+              'Authorization': 'Bearer ' + context.token
             }})
             .then(res => {
                 toast.success('Successfully deleted product!', {

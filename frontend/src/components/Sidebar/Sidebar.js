@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect, useContext} from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import * as FaIcons from "react-icons/fa";
@@ -6,7 +6,7 @@ import * as AiIcons from "react-icons/ai";
 import { SidebarData } from "./SidebarData";
 import SubMenu from "./SubMenu";
 import { IconContext } from "react-icons/lib";
- 
+import AuthContext from "../../store/production/AuthContext";
  
 const NavIcon = styled(Link)`
   margin-left: 2rem;
@@ -43,46 +43,30 @@ const SidebarWrap = styled.div`
 `;
  
 const Sidebar = () => {
+  const context = useContext(AuthContext);
   const [sidebar, setSidebar] = useState(false);
 
   const [userRole, setUserRole] = useState('')  
 
   
-  useEffect(() => {
-    // const role = localStorage.getItem('user') || 'guest';
-    // if (role !== "guest") {
-    //   let parsedUser = JSON.parse(role)
-    //   setUserRole(parsedUser['groups'])
-    // } else {
-    //   setUserRole(role)
-    // }
-    const role = localStorage.getItem('role') || 'guest'
-    setUserRole(role)
+  // useEffect(() => {
+  //   const role = localStorage.getItem('role') || 'guest'
+  //   setUserRole(role)
 
-  }, [localStorage.getItem('role')])
-  
-
-   
+  // }, [localStorage.getItem('role')])
+     
   return (
     <>
       <IconContext.Provider value={{ color: "#fff" }}>
         <SidebarNav sidebar={sidebar}>
           <SidebarWrap>
             <NavIcon to="#">
-              {/* <AiIcons.AiFillHome onClick={showSidebar} /> */}
-              {/* <Link to="/" style={{ textDecoration: 'none', color:'white' }}> */}
                 <SidebarTitle>
                     Production
                 </SidebarTitle>
-                {/* </Link> */}
-                {/* <SidebarTitle>Home</SidebarTitle> */}
             </NavIcon>
             {SidebarData.map((item, index) => {
-                console.log(item.role);
-                // if (item.role.includes(userRole)) {
-                //     return <SubMenu item={item} key={index} />;
-                // }
-                if (item.role.some(r => userRole.includes(r))) {
+                if (item.role.some(r => context.role.includes(r))) {
                   return <SubMenu item={item} key={index} />;
                 }
             })}

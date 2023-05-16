@@ -51,7 +51,7 @@ export const SidebarData = [
   },
   {
     title: "Product",
-    role: ['Worker', 'Plan Manager', 'Inventory Manager'],
+    role: ['Worker', 'Plan Manager', 'Inventory Manager', 'Admin'],
     icon: <FaIcons.FaCarBattery />,
     iconClosed: <RiIcons.RiArrowDownSFill />,
     iconOpened: <RiIcons.RiArrowUpSFill />,
@@ -67,13 +67,13 @@ export const SidebarData = [
         title: "Search",
         path: "/product/search",
         icon: <IoIcons.IoIosSearch />,
-        role: ['User', 'Worker', 'Plan Manager', 'Inventory Manager']
+        role: ['User', 'Worker', 'Plan Manager', 'Inventory Manager', 'Admin']
       },
     ],
   },
   {
     title: "Material",
-    role: ['Worker', 'Plan Manager', 'Inventory Manager'],
+    role: ['Worker', 'Plan Manager', 'Inventory Manager', 'Admin'],
     icon: <FaIcons.FaTools />,
     iconClosed: <RiIcons.RiArrowDownSFill />,
     iconOpened: <RiIcons.RiArrowUpSFill />,
@@ -89,7 +89,7 @@ export const SidebarData = [
         title: "Search",
         path: "/material/search",
         icon: <IoIcons.IoIosSearch />,
-        role: ['User', 'Worker', 'Plan Manager', 'Inventory Manager']
+        role: ['User', 'Worker', 'Plan Manager', 'Inventory Manager', 'Admin']
       },
     ],
   },

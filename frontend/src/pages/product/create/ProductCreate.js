@@ -1,21 +1,23 @@
 import axios from "axios";
 import { toInteger } from "lodash";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import Select from "react-select";
 import { RiSurveyLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
+import AuthContext from "../../../store/production/AuthContext";
 
 function ProductCreate() {
 
-    const navigate = useNavigate()  
+    const navigate = useNavigate()
+    const context = useContext(AuthContext)
     const [product, setProduct] = useState(
         {
             name: "",
             status: "",
             lead_time: "",
-            planner: localStorage.getItem('userId'),
+            planner: context.user.id,
             materials: ""
         }
     )
@@ -28,16 +30,13 @@ function ProductCreate() {
     ]
 
     useEffect(()=>{
-        if (!localStorage.getItem('access-token')){
-          navigate("/")
-        }
         loadMaterials(); 
     },[])
 
     const loadMaterials = async() =>{
         const result=await axios.get("http://localhost:8000/material/", {
           headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('access-token')
+            'Authorization': 'Bearer ' + context.token
           }})
           .then(res => {
             

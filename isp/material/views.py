@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework import viewsets, permissions, generics, status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from .models import Material
 from rest_framework.response import Response
 from .serializers import *
@@ -14,6 +14,10 @@ class IsManager(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.user and (request.user.groups.values_list('name', flat = True)[0] in ['Inventory Manager', 'Plan Manager'])
 
+class IsAdmin(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user and request.user.groups.values_list('name', flat = True)[0] in ["Admin"]
+
 class MaterialViewSet(viewsets.ModelViewSet):
     queryset = Material.objects.all()
     serializer_class = MaterialSerializer
@@ -21,7 +25,7 @@ class MaterialViewSet(viewsets.ModelViewSet):
 class MaterialAPIViewSet(APIView):
     queryset = Material.objects.all()
     serializer_class = MaterialSerializer
-    permission_classes = [IsAuthenticated, IsManager]
+    permission_classes = [IsAuthenticated & (IsManager | IsAdmin)]
 
     def get(self, request):
         materials = self.queryset.all()

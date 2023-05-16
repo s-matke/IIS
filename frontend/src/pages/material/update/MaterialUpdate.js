@@ -1,16 +1,18 @@
 import axios from "axios";
 import { toInteger } from "lodash";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
 import Select from "react-select";
 import { RiSurveyLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
+import AuthContext from "../../../store/production/AuthContext";
 
 function MaterialUpdate() {
 
     const params = useParams()
     const materialId = params.id;
+    const context = useContext(AuthContext);
 
     const navigate = useNavigate()
     
@@ -26,16 +28,13 @@ function MaterialUpdate() {
     )
   
     useEffect(()=>{
-        if (!localStorage.getItem('access-token')){
-          navigate("/")
-        }
         loadMaterial();
     },[])
 
     const loadMaterial = async() =>{
         const result=await axios.get("http://localhost:8000/material/" + materialId, {
           headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('access-token')
+            'Authorization': 'Bearer ' + context.token
           }})
           .then(res => {
             setMaterial(res.data)
@@ -70,7 +69,7 @@ function MaterialUpdate() {
 
         axios.put(`http://localhost:8000/material/` + materialId, material, {
             headers: {
-              'Authorization': 'Bearer ' + localStorage.getItem('access-token')
+              'Authorization': 'Bearer ' + context.token
             }})
             .then(res => {
                 toast.success('Successfully updated material!', {

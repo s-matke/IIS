@@ -1,29 +1,25 @@
 import axios from "axios";
 import { toInteger } from "lodash";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
 import Select from "react-select";
 import { RiSurveyLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
+import AuthContext from "../../../store/production/AuthContext";
 
 function BillOfMaterialUpdate() {
 
     const params = useParams()
     const productId = params.id;
 
-    const navigate = useNavigate()  
+    const navigate = useNavigate();
+    const context = useContext(AuthContext);
 
     const { state } = useLocation();
 
     const [materials, setMaterials] = useState(state?.data.materials)
     const [product, setProduct] = useState(state?.data)
-
-    useEffect(()=>{
-        if (!localStorage.getItem('access-token')){
-          navigate("/")
-        }
-    },[])
 
     const submitProduct = async (e) => {
         e.preventDefault();
@@ -43,7 +39,7 @@ function BillOfMaterialUpdate() {
 
         axios.put(`http://localhost:8000/product/` + productId, product, {
             headers: {
-              'Authorization': 'Bearer ' + localStorage.getItem('access-token')
+              'Authorization': 'Bearer ' + context.token
             }})
             .then(res => {
                 toast.success('Successfully updated product!', {

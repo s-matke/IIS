@@ -1,18 +1,24 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router";
+import AuthContext from "../store/production/AuthContext";
+import { toast } from "react-toastify";
 
 function Signout() {
     // console.log(localStorage.getItem('user'))
-    localStorage.clear();
+    // localStorage.clear();
     // window.location.href = '/';
+    const context = useContext(AuthContext);
 
     const navigate = useNavigate();
-    useEffect(() => {
-        localStorage.clear();
-        // window.location.href = '/';
+
+    const logout = () => {
+        context.logout();
         navigate("/")
-        navigate(0)
-    },[])
+    }
+
+    useEffect(() => {
+        logout();        
+    },[logout])
 
     return(
         <div></div>

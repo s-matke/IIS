@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import { 
   MDBBtn, 
@@ -24,10 +24,12 @@ import { useNavigate } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import jwt from 'jwt-decode';
+import AuthContext from '../../store/production/AuthContext';
 
 
 function Signin() {
 
+    const context = useContext(AuthContext);
     const navigate = useNavigate();
     const [user, setUser] = useState(
         {
@@ -72,13 +74,18 @@ function Signin() {
                         position: toast.POSITION.TOP_CENTER
                     });
                     const tokenDecoded = jwt(res.data['access'])
-                    localStorage.setItem('access-token', res.data['access'])
-                    localStorage.setItem('refresh-token', res.data['refresh'])
-                    localStorage.setItem('userId', tokenDecoded.user_id)
-                    localStorage.setItem('role', JSON.stringify(tokenDecoded.groups))
-                                        
-                    navigate("/home")
-                    navigate(0)
+                    // localStorage.setItem('access-token', res.data['access'])
+                    // localStorage.setItem('refresh-token', res.data['refresh'])
+                    // localStorage.setItem('expires', tokenDecoded.exp)
+                    // localStorage.setItem('userId', tokenDecoded.user_id)
+                    // localStorage.setItem('role', JSON.stringify(tokenDecoded.groups))
+
+                    console.log(res.data)
+                    context.login(res.data);
+                    
+                    navigate("/product/search")                                        
+                    // navigate("/")
+                    // navigate(0)
                     // authMeFunc()                    
                 }
             })

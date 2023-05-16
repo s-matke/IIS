@@ -1,15 +1,17 @@
 import axios from "axios";
 import { toInteger } from "lodash";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import Select from "react-select";
 import { RiSurveyLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
+import AuthContext from "../../../store/production/AuthContext";
 
 function MaterialCreate() {
 
     const navigate = useNavigate()
+    const context = useContext(AuthContext);
     
     const [material, setMaterial] = useState(
         {
@@ -49,14 +51,12 @@ function MaterialCreate() {
 
         axios.post(`http://localhost:8000/material/`, material, {
             headers: {
-              'Authorization': 'Bearer ' + localStorage.getItem('access-token')
+              'Authorization': 'Bearer ' + context.token
             }})
             .then(res => {
                 toast.success('Successfully added new material!', {
                     position: toast.POSITION.TOP_CENTER
                 });
-                console.log(res);
-                console.log(res.data);
                 navigate("/material/search");
             })
             .catch(error => {
@@ -70,13 +70,10 @@ function MaterialCreate() {
     console.log(material)
 
     const onInputChange = (e) => {
-        console.log(e)
-        console.log("---------------")
         setMaterial({...material, [e.target.name]: e.target.value});
     }
 
     const onSelectChange = (e) => {
-        console.log(e)
         setMaterial({...material, ['status']: e.value})
     }
 

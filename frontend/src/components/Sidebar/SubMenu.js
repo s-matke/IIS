@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import AuthContext from "../../store/production/AuthContext";
  
 const SidebarLink = styled(Link)`
   display: flex;
@@ -42,21 +43,8 @@ const DropdownLink = styled(Link)`
  
 const SubMenu = ({ item }) => {
   const [subnav, setSubnav] = useState(false);
- 
+  const context = useContext(AuthContext);
   const showSubnav = () => setSubnav(!subnav);
-
-  const [userRole, setUserRole] = useState('')
-    
-  function updateSidebarData() {
-    const role = localStorage.getItem('role') || 'guest';
-    setUserRole(role)
-  }
-
-
-  
-  useEffect(() => {
-    updateSidebarData()  
-  }, [userRole])
    
   return (
     <>
@@ -76,7 +64,7 @@ const SubMenu = ({ item }) => {
       </SidebarLink>
       {subnav && 
         item.subNav.map((item, index) => {
-            if (item.role.some(r => userRole.includes(r))) {
+            if (item.role.some(r => context.role.includes(r))) {
                 return (
                     <DropdownLink to={item.path} key={index}>
                         {item.icon}
