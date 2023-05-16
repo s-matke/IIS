@@ -158,6 +158,6 @@ def calculate_production_price(data):
     for material in data['materials']:
         # materials_id.append(material['id'])
         material_price = float(Material.objects.filter(id=material['id']).get().price)
-        price_of_producing += material_price * material['quantity']
+        price_of_producing += float(material_price) * float(material['quantity'])
     
     return price_of_producing
