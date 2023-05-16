@@ -95,7 +95,7 @@ class ProductRUDViewSet(generics.RetrieveUpdateDestroyAPIView):
                 request.data['price_of_producing'] = calculate_production_price(request.data)
                 print(request.data)
 
-                # Lock product for update, nowait=True - so user is informed if someone else is already updating the same product
+                # Lock product for update
                 product_to_update = Product.objects.select_for_update(nowait=True).filter(id=product_id).get()
                 product_serializer = self.get_serializer(product_to_update, data=request.data, partial = False)
                 product_serializer.is_valid(raise_exception=True)
