@@ -1,6 +1,6 @@
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 
 import Sidebar from "./components/Sidebar/Sidebar";
 import Signin from "./pages/signin/Signin";
@@ -28,9 +28,12 @@ function App() {
       <BrowserRouter>
         <Sidebar />
         <Routes>
-          <Route path="/signout" element={<Signout/>}></Route>
-          
-          <Route element={<ProtectedRoute isAllowed={context.isLoggedIn} redirectPath="/product/search" />}>
+
+          <Route element={<ProtectedRoute isAllowed={context.isLoggedIn} />}>
+            <Route path="/signout" element={<Signout/>}></Route>
+          </Route>
+
+          <Route element={<ProtectedRoute isAllowed={!context.isLoggedIn} />}>
             <Route path="/" element={<Signin />}></Route>
             <Route path="/signin" element={<Signin />}></Route>
             <Route path="/login" element={<Signin />}></Route>
@@ -40,8 +43,8 @@ function App() {
             <Route path="/worker/create" element={<WorkerCreate />}/>
           </Route>
           
-          <Route element={<ProtectedRoute isAllowed={context.isLoggedIn && (context.role == "Plan Manager" || context.role == "Inventory Manager" || context.role == "Admin" )} />}>
-            <Route path="/product/search" element={<ProductSearch />}/>
+          <Route element={<ProtectedRoute isAllowed={context.isLoggedIn && (context.role == "Plan Manager" || context.role == "Inventory Manager" || context.role == "Admin" ) } />}>
+            <Route path="/product/search" element={<ProductSearch />}/> 
             <Route path="/material/search" element={<MaterialSearch />}/>
           </Route>
 

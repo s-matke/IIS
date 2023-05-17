@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import AuthContext from "../../store/production/AuthContext";
@@ -47,43 +47,40 @@ const SubMenu = ({ item }) => {
   const showSubnav = () => setSubnav(!subnav);
 
   const isLogout = item.title === "Sign Out" ? true : false
-  console.log("IS LOGOUT: ", isLogout)
-  console.log("ITEM: ", item)
    
   return (
     <div>
-
-    { isLogout ? (
-      <SidebarLink to={item.path}
-      onClick={context.logout}>
-        <div>
-          {item.icon}
-          <SidebarLabel>{item.title}</SidebarLabel>
-        </div>
-        <div>
-          {item.subNav && subnav
-            ? item.iconOpened
-            : item.subNav
-            ? item.iconClosed
-            : null}
-        </div>
-      </SidebarLink>
-    ) : (
-      <SidebarLink to={item.path}
-      onClick={item.subNav && showSubnav}>
-        <div>
-          {item.icon}
-          <SidebarLabel>{item.title}</SidebarLabel>
-        </div>
-        <div>
-          {item.subNav && subnav
-            ? item.iconOpened
-            : item.subNav
-            ? item.iconClosed
-            : null}
-        </div>
-      </SidebarLink>
-    )}
+      { isLogout ? (
+        <SidebarLink to={item.path}
+        onClick={context.logout}>
+          <div>
+            {item.icon}
+            <SidebarLabel>{item.title}</SidebarLabel>
+          </div>
+          <div>
+            {item.subNav && subnav
+              ? item.iconOpened
+              : item.subNav
+              ? item.iconClosed
+              : null}
+          </div>
+        </SidebarLink>
+      ) : (
+        <SidebarLink to={item.path}
+        onClick={item.subNav && showSubnav}>
+          <div>
+            {item.icon}
+            <SidebarLabel>{item.title}</SidebarLabel>
+          </div>
+          <div>
+            {item.subNav && subnav
+              ? item.iconOpened
+              : item.subNav
+              ? item.iconClosed
+              : null}
+          </div>
+        </SidebarLink>
+      )}
 
       {subnav && 
         item.subNav.map((item, index) => {
@@ -96,7 +93,7 @@ const SubMenu = ({ item }) => {
                 );
               }  
             })}
-            </div>
+      </div>
   );
 };
  
