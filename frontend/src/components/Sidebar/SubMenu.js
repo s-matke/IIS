@@ -45,9 +45,30 @@ const SubMenu = ({ item }) => {
   const [subnav, setSubnav] = useState(false);
   const context = useContext(AuthContext);
   const showSubnav = () => setSubnav(!subnav);
+
+  const isLogout = item.title === "Sign Out" ? true : false
+  console.log("IS LOGOUT: ", isLogout)
+  console.log("ITEM: ", item)
    
   return (
-    <>
+    <div>
+
+    { isLogout ? (
+      <SidebarLink to={item.path}
+      onClick={context.logout}>
+        <div>
+          {item.icon}
+          <SidebarLabel>{item.title}</SidebarLabel>
+        </div>
+        <div>
+          {item.subNav && subnav
+            ? item.iconOpened
+            : item.subNav
+            ? item.iconClosed
+            : null}
+        </div>
+      </SidebarLink>
+    ) : (
       <SidebarLink to={item.path}
       onClick={item.subNav && showSubnav}>
         <div>
@@ -62,18 +83,20 @@ const SubMenu = ({ item }) => {
             : null}
         </div>
       </SidebarLink>
+    )}
+
       {subnav && 
         item.subNav.map((item, index) => {
             if (item.role.some(r => context.role.includes(r))) {
                 return (
-                    <DropdownLink to={item.path} key={index}>
+                  <DropdownLink to={item.path} key={index}>
                         {item.icon}
                         <SidebarLabel>{item.title}</SidebarLabel>
                     </DropdownLink>
                 );
-            }  
-        })}
-    </>
+              }  
+            })}
+            </div>
   );
 };
  

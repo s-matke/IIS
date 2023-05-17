@@ -107,7 +107,7 @@ export const SidebarData = [
   // },
   {
     title: "Sign Out",
-    path: "/signout",
+    path: "/",
     cName: "nav-text",
     role: ["Admin", "User", "Worker", "Plan Manager", 'Inventory Manager']
 }

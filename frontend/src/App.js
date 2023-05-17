@@ -28,11 +28,14 @@ function App() {
       <BrowserRouter>
         <Sidebar />
         <Routes>
-          <Route path="/" element={<Signin />}></Route>
-          <Route path="/signin" element={<Signin />}></Route>
-          <Route path="/login" element={<Signin />}></Route>
           <Route path="/signout" element={<Signout/>}></Route>
           
+          <Route element={<ProtectedRoute isAllowed={context.isLoggedIn} redirectPath="/product/search" />}>
+            <Route path="/" element={<Signin />}></Route>
+            <Route path="/signin" element={<Signin />}></Route>
+            <Route path="/login" element={<Signin />}></Route>
+          </Route>
+
           <Route element={<ProtectedRoute isAllowed={context.isLoggedIn && context.role == "Admin"} />}>
             <Route path="/worker/create" element={<WorkerCreate />}/>
           </Route>
@@ -42,11 +45,15 @@ function App() {
             <Route path="/material/search" element={<MaterialSearch />}/>
           </Route>
 
-          <Route element={<ProtectedRoute isAllowed={context.isLoggedIn && context.role == "Inventory Manager" } />}>
+          <Route element={<ProtectedRoute isAllowed={context.isLoggedIn && context.role == "Inventory Manager" } redirectPath="/product/search" />}>
             <Route path="/product/create" element={<ProductCreate />}/>
             <Route path="/product/update/:id" element={<ProductUpdate />}/>
             <Route path="/product/update/:id/bom/" element={<BillOfMaterialUpdate />}/>
             <Route path="/product/create/bom" element={<BillOfMaterialCreate />}/>
+            
+          </Route>
+          
+          <Route element={<ProtectedRoute isAllowed={context.isLoggedIn && context.role == "Inventory Manager" } redirectPath="/material/search" />}>
             <Route path="/material/create" element={<MaterialCreate />}/>
             <Route path="/material/update/:id" element={<MaterialUpdate />}/>
           </Route>
