@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework import viewsets, permissions, generics, status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from .models import Material
+from .models import *
 from rest_framework.response import Response
 from .serializers import *
 from django.db import transaction, DatabaseError
@@ -37,16 +37,19 @@ class MaterialAPIViewSet(APIView):
         return Response(material_serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        material_serializer = self.serializer_class(data=request.data)
+        try:
+            with transaction.atomic():
 
-        if not material_serializer.is_valid():
-            # print(material_serializer.errors["__all__"].as_data()[0].code)
-            print(material_serializer.errors)
-            return Response(material_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-        material_serializer.save()
+                material_serializer = self.serializer_class(data=request.data)
 
-        return Response(material_serializer.data, status=status.HTTP_201_CREATED)
+                if not material_serializer.is_valid():
+                    return Response(material_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                
+                material_serializer.save()
+
+                return Response(material_serializer.data, status=status.HTTP_201_CREATED)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class BillOfMaterialViewSet(APIView):
     queryset = BillOfMaterial.objects.all()
@@ -102,4 +105,12 @@ class MaterialRetrieveUpdateViewSet(generics.RetrieveUpdateAPIView):
         except DatabaseError:
             return Response(status=status.HTTP_423_LOCKED)
         except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)    
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+class SupplierAPIViewSet(APIView):
+    queryset = Supplier.objects.all()
+    serializer_class = SupplierSerializer
+
+    def get(self, request):
+        suppliers = self.serializer_class(self.queryset.all(), many=True)
+        return Response(suppliers.data, status=status.HTTP_200_OK)

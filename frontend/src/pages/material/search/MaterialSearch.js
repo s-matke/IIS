@@ -77,7 +77,7 @@ export default function MaterialSearch() {
                   <th scope="row" key={index}>{index+1}</th>
                   <td>{material.name}</td>
                   <td>{material.price}</td>
-                  <td>{material.supplier}</td>
+                  <td>{material.supplier_name}</td>
                   <td>{material.created}</td>
                   <td>{material.description}</td>
                   </tr>

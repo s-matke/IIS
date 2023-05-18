@@ -7,6 +7,7 @@ import { SidebarData } from "./SidebarData";
 import SubMenu from "./SubMenu";
 import { IconContext } from "react-icons/lib";
 import AuthContext from "../../store/production/AuthContext";
+import { isNull } from "lodash";
  
 const NavIcon = styled(Link)`
   margin-left: 2rem;
@@ -36,6 +37,7 @@ const SidebarTitle = styled.div`
     text-decoration: none;
     color: white;
     margin-top: 10px;
+    font-size: 20px;
 `
  
 const SidebarWrap = styled.div`
@@ -48,7 +50,8 @@ const Sidebar = () => {
 
   const [userRole, setUserRole] = useState('')  
 
-  
+  const name = isNull(context.user) ? 'Production' : context.user.name
+ 
   // useEffect(() => {
   //   const role = localStorage.getItem('role') || 'guest'
   //   setUserRole(role)
@@ -62,7 +65,7 @@ const Sidebar = () => {
           <SidebarWrap>
             <NavIcon to="#">
                 <SidebarTitle>
-                    Production
+                    {name}
                 </SidebarTitle>
             </NavIcon>
             {SidebarData.map((item, index) => {

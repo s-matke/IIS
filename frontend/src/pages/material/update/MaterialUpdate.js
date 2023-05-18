@@ -15,6 +15,9 @@ function MaterialUpdate() {
     const context = useContext(AuthContext);
 
     const navigate = useNavigate()
+
+    const [supplierOptions, setSupplierOptions] = useState([])
+    const [selectedSupplier, setSelectedSupplier] = useState()
     
     const [material, setMaterial] = useState(
         {
@@ -28,23 +31,52 @@ function MaterialUpdate() {
     )
   
     useEffect(()=>{
+        loadSupplier();
         loadMaterial();
     },[])
 
     const loadMaterial = async() =>{
         const result=await axios.get("http://localhost:8000/material/" + materialId, {
-          headers: {
-            'Authorization': 'Bearer ' + context.token
-          }})
-          .then(res => {
-            setMaterial(res.data)
-          })
-          .catch(error => {
-            toast.error("Couldn't retrieve material! Try again later.", {
-                position: toast.POSITION.TOP_CENTER
+            headers: {
+              'Authorization': 'Bearer ' + context.token
+            }})
+            .then(res => {
+                
+                const selectedSupplier = {
+                    id: res.data['supplier'],
+                    name: res.data['supplier_name']
+                }
+                
+                setSelectedSupplier(selectedSupplier)
+                setMaterial(res.data)
             })
-            console.log(error);
+            .catch(error => {
+                toast.error("Couldn't retrieve material! Try again later.", {
+                    position: toast.POSITION.TOP_CENTER
+                })
+                console.log(error);
         })
+    }
+
+    const loadSupplier = async() => {
+        const result = await axios.get("http://localhost:8000/suppliers", {
+            headers: {
+                'Authorization': 'Bearer ' + context.token
+            }})
+            .then(res => {
+                const supplierList = res.data.map(supplier => ({
+                    name: supplier.name,
+                    id: supplier.id,
+                }))
+                setSupplierOptions(supplierList)
+            })
+            .catch(error => {
+                toast.error("Couldn't retrieve suppliers! Try again later.", {
+                    position: toast.POSITION.TOP_CENTER
+                })
+                console.log(error);
+            }
+        )
     }
 
     const submitMaterial = async (e) => {
@@ -58,7 +90,7 @@ function MaterialUpdate() {
             }
         })
 
-        if (material['min_amount'] >= material['max_amount']) {
+        if (parseInt(material['min_amount']) >= parseInt(material['max_amount'])) {
             flag = true
             toast.warning('Value for min amount must be lower than value for max amount!', {
                 position: toast.POSITION.TOP_CENTER
@@ -66,6 +98,8 @@ function MaterialUpdate() {
         }
 
         if (flag) return;
+
+        console.log("New material: ", material)
 
         axios.put(`http://localhost:8000/material/` + materialId, material, {
             headers: {
@@ -86,6 +120,27 @@ function MaterialUpdate() {
                 console.log(error);
             })
     }
+
+
+    const onSelectChange = (e) => {
+        
+        console.log(e)
+
+        const newSelectedSupplier = {
+            id: e.id,
+            name: e.name
+        }
+        
+        setSelectedSupplier(newSelectedSupplier)
+
+        setMaterial({...material, ['supplier']: e.id, ['supplier_name']: e.name})
+        // setMaterial({...material, ['supplier_name']: e.name})
+    }
+
+
+    console.log("Selected: ", selectedSupplier)
+    console.log("Mats: ", material)
+
 
     const onInputChange = (e) => {
         setMaterial({...material, [e.target.name]: e.target.value});
@@ -156,17 +211,18 @@ function MaterialUpdate() {
                             <label htmlFor="supplier" className="form-label">
                                 Supplier:
                             </label>
-                            <div className="input-group">
-                                <input
-                                    type={"text"}
-                                    className="form-control"
-                                    maxLength={30}
-                                    placeholder="Supplier..."
-                                    value={material.supplier}
-                                    name="supplier"
-                                    onChange={(e) => onInputChange(e)}
+                            <div className="dropdown-container">
+                                <Select
                                     required
-                                    />
+                                    options={supplierOptions}
+                                    name="supplier"
+                                    value={selectedSupplier}
+                                    placeholder="Choose supplier"
+                                    onChange={(e) => onSelectChange(e)}
+                                    getOptionLabel={(option) => option.name}
+                                    getOptionValue={(option) => option.id}
+                                    isSearchable={true}
+                                />
                             </div>
                         </div>
                         <div className="mb-4">

@@ -13,6 +13,8 @@ function MaterialCreate() {
     const navigate = useNavigate()
     const context = useContext(AuthContext);
     
+    const [supplierOptions, setSupplierOptions] = useState([])
+    const [selectedSupplier, setSelectedSupplier] = useState()
     const [material, setMaterial] = useState(
         {
             name: "",
@@ -24,10 +26,26 @@ function MaterialCreate() {
         }
     )
   
-    const statusOptions = [
-        { value: "IP", label: "In Materialion"},
-        { value: "OP", label: "Out Of Materialion"}
-    ]
+
+    useEffect(() => {
+        loadSuppliers();
+    }, [])
+
+    const loadSuppliers = async() => {
+        const result = await axios.get("http://localhost:8000/suppliers", {
+            headers: {
+                'Authorization': 'Bearer ' + context.token
+            }
+        })
+        .then(res => {
+            const supplierList = res.data.map(supplier => ({
+                label: supplier.name,
+                value: supplier.id,
+            }));
+            
+            setSupplierOptions(supplierList);
+        })
+    }
 
     const submitMaterial = async (e) => {
         e.preventDefault();
@@ -40,7 +58,7 @@ function MaterialCreate() {
             }
         })
 
-        if (material['min_amount'] >= material['max_amount']) {
+        if (parseInt(material['min_amount']) >= parseInt(material['max_amount'])) {
             flag = true
             toast.warning('Value for min amount must be lower than value for max amount!', {
                 position: toast.POSITION.TOP_CENTER
@@ -74,7 +92,12 @@ function MaterialCreate() {
     }
 
     const onSelectChange = (e) => {
-        setMaterial({...material, ['status']: e.value})
+        const newSelectedSupplier = {
+            id: e.value,
+            name: e.name
+        }
+        setSelectedSupplier(newSelectedSupplier)
+        setMaterial({...material, ['supplier']: e.value})
     }
 
     return(
@@ -139,16 +162,15 @@ function MaterialCreate() {
                             <label htmlFor="supplier" className="form-label">
                                 Supplier:
                             </label>
-                            <div className="input-group">
-                                <input
-                                    type={"text"}
-                                    className="form-control"
-                                    maxLength={30}
-                                    placeholder="Supplier..."
-                                    name="supplier"
-                                    onChange={(e) => onInputChange(e)}
+                            <div className="dropdown-container">
+                                <Select
                                     required
-                                    />
+                                    options={supplierOptions}
+                                    name="supplier"
+                                    placeholder="Choose supplier"
+                                    onChange={(e) => onSelectChange(e)}
+                                    isSearchable={true}
+                                />
                             </div>
                         </div>
                         <div className="mb-4">

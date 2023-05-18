@@ -91,6 +91,34 @@ export const SidebarData = [
         icon: <IoIcons.IoIosSearch />,
         role: ['User', 'Worker', 'Plan Manager', 'Inventory Manager', 'Admin']
       },
+      {
+        title: "Order",
+        path: "/material/order/create",
+        icon: <FaIcons.FaTruck />,
+        role: ['User', 'Worker', 'Plan Manager', 'Inventory Manager', 'Admin']
+      },
+    ],
+  },
+  {
+    title: "Inventory",
+    role: ['Worker', 'Plan Manager', 'Inventory Manager', 'Admin'],
+    icon: <FaIcons.FaTools />,
+    iconClosed: <RiIcons.RiArrowDownSFill />,
+    iconOpened: <RiIcons.RiArrowUpSFill />,
+ 
+    subNav: [
+      {
+        title: "Product",
+        path: "/inventory/products",
+        icon: <IoIcons.IoMdCreate />,
+        role: ['Worker', 'Inventory Manager']
+      },
+      {
+        title: "Material",
+        path: "/inventory/materials",
+        icon: <IoIcons.IoIosSearch />,
+        role: ['User', 'Worker', 'Plan Manager', 'Inventory Manager', 'Admin']
+      },
     ],
   },
   {

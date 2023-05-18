@@ -33,7 +33,7 @@ export default function ProductSearch() {
     {
       const searchData=filterData.filter((item)=>item.name.toLowerCase().includes(getSearch.toLowerCase().trim()) || 
                                                item.status.toLowerCase().includes(getSearch.toLowerCase().trim()) || 
-                                               item.planner.toString().toLowerCase().includes(getSearch.toLowerCase().trim()));
+                                               item.created.toString().toLowerCase().includes(getSearch.toLowerCase().trim()));
       setProducts(searchData);
     }
     else
@@ -67,7 +67,6 @@ export default function ProductSearch() {
       <th scope="col">STATUS</th>
       <th scope="col">LEAD TIME</th>
       <th scope="col">PRICE</th>
-      <th scope="col">WORKER</th>
     </tr>
   </thead>
   <tbody>
@@ -80,7 +79,6 @@ export default function ProductSearch() {
         <td>{product.status}</td>
         <td>{product.lead_time}</td>
         <td>{product.price_of_producing}</td>
-        <td>{product.planner}</td>
         </tr>
         ))
     }

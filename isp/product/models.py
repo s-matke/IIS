@@ -2,7 +2,6 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from account.models import Account
 
-# Create your models here.
 class Product(models.Model):
     
     class ProductStatus(models.TextChoices):

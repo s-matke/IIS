@@ -12,6 +12,12 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import datetime
+
+# Radno vreme
+PRODUCTION_OPENING_TIME = datetime.time(8, 0)
+PRODUCTION_CLOSING_TIME = datetime.time(20, 0)
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,7 +48,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'product',
-    'material'
+    'material',
+    'inventory',
+    'order'
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -145,6 +153,6 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=10),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=100),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=300),
 }

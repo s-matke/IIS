@@ -19,6 +19,7 @@ import BillOfMaterialCreate from "./pages/product/create/BillOfMaterialCreate";
 import BillOfMaterialUpdate from "./pages/product/create/BillOfMaterialUpdate";
 import AuthContext from "./store/production/AuthContext";
 import ProtectedRoute from "./components/routing/ProtectedRoute";
+import CreateOrder from "./pages/material/order/CreateOrder";
 
 function App() {
   const context = useContext(AuthContext);
@@ -46,6 +47,7 @@ function App() {
           <Route element={<ProtectedRoute isAllowed={context.isLoggedIn && (context.role == "Plan Manager" || context.role == "Inventory Manager" || context.role == "Admin" ) } />}>
             <Route path="/product/search" element={<ProductSearch />}/> 
             <Route path="/material/search" element={<MaterialSearch />}/>
+            {/* <Route path="/material/order/search" element={<OrderMaterial/>}/> */}
           </Route>
 
           <Route element={<ProtectedRoute isAllowed={context.isLoggedIn && context.role == "Inventory Manager" } redirectPath="/product/search" />}>
@@ -53,7 +55,7 @@ function App() {
             <Route path="/product/update/:id" element={<ProductUpdate />}/>
             <Route path="/product/update/:id/bom/" element={<BillOfMaterialUpdate />}/>
             <Route path="/product/create/bom" element={<BillOfMaterialCreate />}/>
-            
+            <Route path="/material/order/create" element={<CreateOrder/>}/>
           </Route>
           
           <Route element={<ProtectedRoute isAllowed={context.isLoggedIn && context.role == "Inventory Manager" } redirectPath="/material/search" />}>

@@ -43,6 +43,7 @@ const retrieveUserFromToken = (token) => {
 
     let user = {
         id: decoded.user_id,
+        name: decoded.user_name,
     };
 
     return user;
@@ -75,7 +76,7 @@ export const AuthContextProvider = (props) => {
 
     const logoutHandler = useCallback(() => {
         setToken(null);
-        setUser({ id: 0 });
+        setUser(null);
         setRole("guest");
         localStorage.removeItem("token");
         localStorage.removeItem("expires");
