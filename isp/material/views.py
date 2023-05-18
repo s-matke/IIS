@@ -95,11 +95,12 @@ class MaterialRetrieveUpdateViewSet(generics.RetrieveUpdateAPIView):
                     print("old price: ", product.price_of_producing)
                     print("new price: ", new_price_of_producing)
                     updated_product = {
-                        "price_of_producing": new_price_of_producing
+                        "price_of_producing": round(new_price_of_producing, 2)
                     }
                     product_serializer = ProductSerializer(product, data=updated_product, partial=True)
                     product_serializer.is_valid(raise_exception=True)
-                    self.perform_update(product_serializer)
+                    # self.perform_update(product_serializer)
+                    product_serializer.save()
                 
                 return Response(status=status.HTTP_200_OK)
         except DatabaseError:

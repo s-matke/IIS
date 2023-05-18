@@ -20,6 +20,8 @@ import BillOfMaterialUpdate from "./pages/product/create/BillOfMaterialUpdate";
 import AuthContext from "./store/production/AuthContext";
 import ProtectedRoute from "./components/routing/ProtectedRoute";
 import CreateOrder from "./pages/material/order/CreateOrder";
+import ProductInventory from "./pages/inventory/ProductInventory";
+import MaterialInventory from "./pages/inventory/MaterialInventory";
 
 function App() {
   const context = useContext(AuthContext);
@@ -47,6 +49,8 @@ function App() {
           <Route element={<ProtectedRoute isAllowed={context.isLoggedIn && (context.role == "Plan Manager" || context.role == "Inventory Manager" || context.role == "Admin" ) } />}>
             <Route path="/product/search" element={<ProductSearch />}/> 
             <Route path="/material/search" element={<MaterialSearch />}/>
+            <Route path="/inventory/products" element={<ProductInventory />}/>
+            <Route path="/inventory/materials" element={<MaterialInventory />}/>
             {/* <Route path="/material/order/search" element={<OrderMaterial/>}/> */}
           </Route>
 

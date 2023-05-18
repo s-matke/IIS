@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'product',
     'material',
     'inventory',
-    'order'
+    'order',
+    'django_crontab'
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -156,3 +157,7 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=100),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=300),
 }
+
+CRONJOBS = [
+    ('*/5 * * * *', 'order.cron.check_order_delivery', '>> ' + str(BASE_DIR) + '/order_logger.log')
+]

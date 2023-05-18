@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.response import Response
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, generics
 from .models import Order
 from material.models import Material
 from inventory.models import MaterialInventory
@@ -51,3 +51,9 @@ class OrderAPIViewSet(APIView):
                 return Response(order_serializer.data, status=status.HTTP_201_CREATED)
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+class OrderDViewSet(generics.DestroyAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
+    # def delete(self, request):

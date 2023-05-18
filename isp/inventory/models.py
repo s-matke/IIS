@@ -2,7 +2,7 @@ from django.db import models
 from material.models import Material
 from order.models import Order
 from product.models import Product
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_delete, post_delete
 from django.dispatch import receiver
 
 # Create your models here.
@@ -29,3 +29,13 @@ def update_recent_issued_order(sender, instance, created, **kwargs):
         material_inventory.recent_issued_order = instance.issued_date
         # material_inventory.quantity += instance.ordered_quantity
         material_inventory.save()
+
+# @receiver(pre_delete, sender=Order)
+# def update_quantity(sender, instance, using, **kwargs):
+#     print(instance.ordered_quantity)
+    
+@receiver(post_delete, sender=Order)
+def update_quantity(sender, instance, using, **kwags):
+    material_inventory = MaterialInventory.objects.get(material=instance.material)
+    material_inventory.quantity += instance.ordered_quantity
+    material_inventory.save()
