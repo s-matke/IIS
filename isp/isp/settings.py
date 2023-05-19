@@ -15,8 +15,8 @@ from datetime import timedelta
 import datetime
 
 # Radno vreme
-PRODUCTION_OPENING_TIME = datetime.time(8, 0)
-PRODUCTION_CLOSING_TIME = datetime.time(20, 0)
+PRODUCTION_OPENING_TIME = datetime.time(8, 0, 0, 0)
+PRODUCTION_CLOSING_TIME = datetime.time(20, 0, 0, 0)
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -51,7 +51,8 @@ INSTALLED_APPS = [
     'material',
     'inventory',
     'order',
-    'django_crontab'
+    'django_crontab',
+    'plan'
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True

@@ -29,11 +29,7 @@ def update_recent_issued_order(sender, instance, created, **kwargs):
         material_inventory.recent_issued_order = instance.issued_date
         # material_inventory.quantity += instance.ordered_quantity
         material_inventory.save()
-
-# @receiver(pre_delete, sender=Order)
-# def update_quantity(sender, instance, using, **kwargs):
-#     print(instance.ordered_quantity)
-    
+   
 @receiver(post_delete, sender=Order)
 def update_quantity(sender, instance, using, **kwags):
     material_inventory = MaterialInventory.objects.get(material=instance.material)

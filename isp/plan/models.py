@@ -1,10 +1,32 @@
 from django.db import models
 from product.models import Product
+from account.models import Account
+from django.utils.translation import gettext_lazy as _
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
-# class Plan(models.Model):
-#     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=False)
-#     start_date = models.DateTimeField(null=False)
-#     end_date = models.DateTimeField(null=False)
-#     aprox_producable = models.PositiveIntegerField(null=False)
-#     price = models.DecimalField(max_digits=10, decimal_places=2, null=False)
+class Plan(models.Model):
+
+    class PlanStatus(models.TextChoices):
+        DECLINED = 'D', _('Declined')
+        APPROVED = 'A', _('Approved')
+        PENDING = 'P', _('Pending')
+
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=False)
+    start_date = models.DateTimeField(null=False)
+    end_date = models.DateTimeField(null=False)
+    producable_amount = models.PositiveIntegerField(null=False)
+    production_cost = models.DecimalField(max_digits=10, decimal_places=2, null=False)
+    planner = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True)
+    status = models.CharField(max_length=1, choices=PlanStatus.choices, default=PlanStatus.PENDING)
+
     
+class PlanQueue(models.Model):
+    plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+
+
+@receiver(post_save, sender=Plan)
+def add_plan_to_queue(sender, instance, created, **kwargs):
+    if created:
+        PlanQueue.objects.create(plan=instance)
