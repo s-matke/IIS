@@ -83,7 +83,7 @@ export const SidebarData = [
         title: "Add",
         path: "/material/create",
         icon: <IoIcons.IoMdCreate />,
-        role: ['Worker', 'Inventory Manager']
+        role: ['Inventory Manager']
       },
       {
         title: "Search",
@@ -95,14 +95,14 @@ export const SidebarData = [
         title: "Order",
         path: "/material/order/create",
         icon: <FaIcons.FaTruck />,
-        role: ['User', 'Worker', 'Plan Manager', 'Inventory Manager', 'Admin']
+        role: ['Inventory Manager']
       },
     ],
   },
   {
     title: "Inventory",
     role: ['Worker', 'Plan Manager', 'Inventory Manager', 'Admin'],
-    icon: <FaIcons.FaTools />,
+    icon: <FaIcons.FaBoxes />,
     iconClosed: <RiIcons.RiArrowDownSFill />,
     iconOpened: <RiIcons.RiArrowUpSFill />,
  
@@ -111,7 +111,7 @@ export const SidebarData = [
         title: "Product",
         path: "/inventory/products",
         icon: <IoIcons.IoMdCreate />,
-        role: ['Worker', 'Inventory Manager']
+        role: ['Plan Manager', 'Inventory Manager', 'Admin']
       },
       {
         title: "Material",
@@ -127,12 +127,6 @@ export const SidebarData = [
     role: ['guest'],
     icon: <FaIcons.FaSignInAlt />,//<IoIcons.IoIosLogIn />,
   },
-  // {
-  //   title: "Sign Up",
-  //   path: "/signup",
-  //   role: ['guest'],
-  //   // icon: < />,//<IoIcons.IoIosLogIn />,
-  // },
   {
     title: "Sign Out",
     path: "/",

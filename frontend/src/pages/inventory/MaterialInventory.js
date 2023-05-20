@@ -32,8 +32,7 @@ export default function MaterialInventory() {
     if(getSearch.length>0)
     {
       const searchData=filterData.filter((item)=>item.material_name.toLowerCase().includes(getSearch.toLowerCase().trim()) || 
-                                               item.quantity.toString().toLowerCase().includes(getSearch.toLowerCase().trim()) || 
-                                               item.recent_issued_order.toString().toLowerCase().includes(getSearch.toLowerCase().trim()));
+                                               item.quantity.toString().toLowerCase().includes(getSearch.toLowerCase().trim()));
       setProducts(searchData);
     }
     else
