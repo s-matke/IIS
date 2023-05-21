@@ -52,7 +52,9 @@ INSTALLED_APPS = [
     'inventory',
     'order',
     'django_crontab',
-    'plan'
+    'plan',
+    'production',
+    'machine'
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True

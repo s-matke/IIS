@@ -28,6 +28,28 @@ export const SidebarData = [
     ],
   },
   {
+    title: "Machine",
+    role: ['Admin'],
+    icon: <FaIcons.FaUserCog />,
+    iconClosed: <RiIcons.RiArrowDownSFill />,
+    iconOpened: <RiIcons.RiArrowUpSFill />,
+ 
+    subNav: [
+      {
+        title: "Create",
+        path: "/machine/create",
+        icon: <IoIcons.IoMdCreate />,
+        role: ['Admin']
+      },
+      {
+        title: "Search",
+        path: "/machine/search",
+        icon: <IoIcons.IoIosSearch />,
+        role: ['Admin']
+      },
+    ],
+  },
+  {
     title: "Production",
     role: ['Worker', 'User', 'Plan Manager'],
     icon: <FaIcons.FaUserCog />,

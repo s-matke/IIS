@@ -24,6 +24,9 @@ import ProductInventory from "./pages/inventory/ProductInventory";
 import MaterialInventory from "./pages/inventory/MaterialInventory";
 import PlanCreate from "./pages/plan/create/PlanCreate";
 import PlanSearch from "./pages/plan/search/PlanSearch";
+import MachineCreate from "./pages/machine/create/MachineCreate";
+import MachineSearch from "./pages/machine/search/MachineSearch";
+import MachineUpdate from "./pages/machine/update/MachineUpdate";
 
 function App() {
   const context = useContext(AuthContext);
@@ -46,6 +49,9 @@ function App() {
 
           <Route element={<ProtectedRoute isAllowed={context.isLoggedIn && context.role == "Admin"} />}>
             <Route path="/worker/create" element={<WorkerCreate />}/>
+            <Route path="/machine/create" element={<MachineCreate />}/>
+            <Route path="/machine/search" element={<MachineSearch />}/>
+            <Route path="/machine/update/:id" element={<MachineUpdate />}/>
           </Route>
           
           <Route element={<ProtectedRoute isAllowed={context.isLoggedIn && (context.role == "Plan Manager" || context.role == "Inventory Manager" || context.role == "Admin" ) } />}>
