@@ -34,15 +34,21 @@ function PlanSearch() {
     }
 
     const filterPlansByStatus = async(status) => {
-        console.log(status)
         const result = await axios.get("http://localhost:8000/plan/" + context.user.id + "/" + status, {
             headers: {
                 'Authorization': 'Bearer ' + context.token
             }
         })
+        .then(res => {
+            setPlans(res.data)
+            setFilterData(res.data)
+        })
+        .catch(error => {
+            toast.error("Error: Couldn't fetch data!", {
+                position: toast.POSITION.TOP_RIGHT
+            })
+        })
 
-        setPlans(result.data)
-        setFilterData(result.data)
     }
 
     const handleSearch = (event)=>
@@ -118,9 +124,6 @@ function PlanSearch() {
         setShow(false)
     }
   
-    const test = () => {
-        console.log("hello world")
-    }
     return (
         <div className='container'>
             <Navbar bg="light" expand="lg">

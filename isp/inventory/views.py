@@ -29,7 +29,7 @@ class MaterialInventoryAPIViewSet(APIView):
     serializer_class = MaterialInventorySerializer
 
     def get(self, request):
-        materials = self.queryset.all()
+        materials = self.queryset.all().order_by('recent_issued_order')
         material_serializer = self.serializer_class(materials, many=True)
 
         if len(material_serializer.data) == 0:
