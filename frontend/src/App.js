@@ -22,6 +22,8 @@ import ProtectedRoute from "./components/routing/ProtectedRoute";
 import CreateOrder from "./pages/material/order/CreateOrder";
 import ProductInventory from "./pages/inventory/ProductInventory";
 import MaterialInventory from "./pages/inventory/MaterialInventory";
+import PlanCreate from "./pages/plan/create/PlanCreate";
+import PlanSearch from "./pages/plan/search/PlanSearch";
 
 function App() {
   const context = useContext(AuthContext);
@@ -65,6 +67,12 @@ function App() {
           <Route element={<ProtectedRoute isAllowed={context.isLoggedIn && context.role == "Inventory Manager" } redirectPath="/material/search" />}>
             <Route path="/material/create" element={<MaterialCreate />}/>
             <Route path="/material/update/:id" element={<MaterialUpdate />}/>
+          </Route>
+
+          <Route element={<ProtectedRoute isAllowed={context.isLoggedIn && context.role == "Plan Manager"} />}>
+            <Route path="/production/plan" element={<PlanCreate />}/>
+            <Route path="/production/plan/search" element={<PlanSearch />}/>
+            {/* <Route path="/production/plan/:id" element={<PlanUpdate />}/> */}
           </Route>
         </Routes>
       </BrowserRouter>

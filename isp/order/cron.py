@@ -6,7 +6,6 @@ from pytz import timezone
 import datetime
 
 def check_order_delivery():
-    # print(time_log() + "Searching for orders...")
     delivered_orders = Order.objects.filter(expected_delivery_date__lte = datetime.datetime.now())
 
     if delivered_orders.count() == 0:

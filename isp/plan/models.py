@@ -8,9 +8,9 @@ from django.db.models.signals import post_save
 class Plan(models.Model):
 
     class PlanStatus(models.TextChoices):
-        DECLINED = 'D', _('Declined')
-        APPROVED = 'A', _('Approved')
-        PENDING = 'P', _('Pending')
+        DECLINED = 'DECLINED', _('Declined')
+        APPROVED = 'APPROVED', _('Approved')
+        PENDING = 'PENDING', _('Pending')
 
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=False)
     start_date = models.DateTimeField(null=False)
@@ -18,7 +18,7 @@ class Plan(models.Model):
     producable_amount = models.PositiveIntegerField(null=False)
     production_cost = models.DecimalField(max_digits=10, decimal_places=2, null=False)
     planner = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True)
-    status = models.CharField(max_length=1, choices=PlanStatus.choices, default=PlanStatus.PENDING)
+    status = models.CharField(choices=PlanStatus.choices, default=PlanStatus.PENDING)
 
     
 class PlanQueue(models.Model):

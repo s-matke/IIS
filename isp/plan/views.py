@@ -31,9 +31,10 @@ class PlanAPIViewSet(APIView):
     def post(self, request):
         try:
             with transaction.atomic():
-
-                start_date = datetime.datetime.strptime(request.data['start_date'], "%Y-%m-%d %H:%M:%S")
-                end_date = datetime.datetime.strptime(request.data['end_date'], "%Y-%m-%d %H:%M:%S")
+                print(request.data['start_date'])
+                start_date = datetime.datetime.strptime(request.data['start_date'], "%Y-%m-%dT%H:%M")
+                print(start_date)
+                end_date = datetime.datetime.strptime(request.data['end_date'], "%Y-%m-%dT%H:%M")
                 product = Product.objects.filter(id = request.data['product']).get()
                 
                 producable_amount, production_cost = calculate_producable_amount_and_cost(start_date, end_date, product)
@@ -55,3 +56,37 @@ class PlanAPIViewSet(APIView):
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
     
+class PlanRetrieveDestroyViewSet(generics.RetrieveDestroyAPIView):
+    queryset = Plan.objects.all()
+    serializer_class = PlanSerializer
+
+    def get(self, request, *args, **kwargs):
+        planner_id = kwargs['pk']
+
+        plans = Plan.objects.filter(planner_id = planner_id)
+
+        plan_serializer = self.serializer_class(plans, many=True)
+        return Response(plan_serializer.data, status=status.HTTP_200_OK)
+
+class PlanRetrieveByStatusViewSet(generics.RetrieveAPIView):
+    queryset = Plan.objects.all()
+    serializer_class = PlanSerializer
+
+    def get(self, request, *args, **kwargs):
+        planner_id = kwargs['pk']
+        plan_status = kwargs['status']
+        
+        if plan_status == 'pending':
+            plan_status = Plan.PlanStatus.PENDING
+        elif plan_status == 'approved':
+            plan_status = Plan.PlanStatus.APPROVED
+        elif plan_status == 'declined':
+            plan_status = Plan.PlanStatus.DECLINED
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        plans = Plan.objects.filter(planner_id = planner_id, status = plan_status).order_by('start_date', 'end_date', 'producable_amount')
+        
+        plan_serializer = self.serializer_class(plans, many=True)
+
+        return Response(plan_serializer.data, status=status.HTTP_200_OK)

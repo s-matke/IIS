@@ -87,13 +87,11 @@ class MaterialRetrieveUpdateViewSet(generics.RetrieveUpdateAPIView):
                 
                 # Select products for updating
                 products_for_update = Product.objects.select_for_update(nowait=True).filter(id__in = product_ids)
-                print("Pre fora")
                 # Iterate over products and update their price
                 for product in products_for_update:
                     quantity = BillOfMaterial.objects.filter(product=product.id, material=material_id).get().quantity
                     new_price_of_producing = float(product.price_of_producing) - (float(old_material_price) * quantity) + (float(new_material_price) * quantity)
-                    print("old price: ", product.price_of_producing)
-                    print("new price: ", new_price_of_producing)
+
                     updated_product = {
                         "price_of_producing": round(new_price_of_producing, 2)
                     }

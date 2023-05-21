@@ -43,7 +43,7 @@ export const SidebarData = [
       },
       {
         title: "Search",
-        path: "/production/search",
+        path: "/production/plan/search",
         icon: <IoIcons.IoIosSearch />,
         role: ['User', 'Worker', 'Plan Manager']
       },
