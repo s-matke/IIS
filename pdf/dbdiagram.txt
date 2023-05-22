@@ -1,0 +1,104 @@
+
+Table "product" {
+  "id" bigint [pk, not null]
+  "name" "varchar2(30)"
+  "created" date [not null]
+  "status" "varchar2(5)"
+  "lead_time" "number(10, 2)"
+  "price_of_producing" "number(10, 2)"
+  "planner_id" bigint
+}
+
+Table "material" {
+  "id" bigint [pk, not null]
+  "name" "varchar2(50)"
+  "description" "varchar2(200)"
+  "price" "number(10, 2)" [not null]
+  "supplier" "varchar2(70)"
+  "created" date [not null]
+  "max_amount" integer [not null]
+  "min_amount" integer [not null]
+}
+
+Table "account" {
+  "id" bigint [pk, not null]
+  "address" "varchar2(100)"
+  "city" "varchar2(50)"
+  "country" "varchar2(50)"
+  "phone" "varchar2(20)"
+  "user_id" integer [not null]
+  "salary" "number(10, 2)"
+}
+
+Table "billofmaterial" {
+  "id" bigint [pk, not null]
+  "quantity" integer [not null]
+  "material_id" bigint [unique, not null]
+  "product_id" bigint [unique, not null]
+}
+
+Table "plan" {
+  "id" bigint [pk, not null]
+  "product_id" bigint [not null]
+  "start_date" date
+  "end_date" date
+  "producable_amount" integer
+  "production_cost" number(10, 2)
+  "planner_id" bigint
+  "status" enum
+}
+
+Table "order" {
+  "id" bigint [pk, not null]
+  "material_id" bigint [not null]
+  "ordered_by" bigint
+  "issued_date" date
+  "expected_delivery_date" date
+  "quantity" integer [not null]
+}
+
+Table "material_inventory" {
+  "id" bigint [pk, not null]
+  "material_id" bigint [not null]
+  "quantity" integer
+  "recent_issued_order" date
+}
+
+Table "product_inventory" {
+  "id" bigint [pk, not null]
+  "product_id" bigint [not null]
+  "quantity" integer
+}
+
+Table "plan_queue" {
+  "id" bigint [pk, not null]
+  "plan_id" bigint [not null]
+  "created" date
+}
+
+Table "machine" {
+  "id" bigint [pk, not null]
+  "name" varchar2(50)
+  "version" varchar2(20)
+  "price" number(10, 2)
+  "health" number(4, 1)
+  "produced_amount" integer
+  "last_diagnosis" date
+}
+
+Ref "product_planner_id_c203cbe0_fk_account_id":"account"."id" < "product"."planner_id" [update: no action, delete: no action]
+
+Ref "material_billofmater_material_id_1c2d7a56_fk_material_":"material"."id" < "billofmaterial"."material_id" [update: no action, delete: no action]
+
+Ref "material_billofmater_product_id_cffcbf19_fk_product_p":"product"."id" < "billofmaterial"."product_id" [update: no action, delete: no action]
+
+Ref: order.ordered_by > account.id
+Ref: order.material_id > material.id
+
+Ref: material_inventory.material_id - material.id
+Ref: product_inventory.product_id - product.id
+
+Ref: plan.product_id > product.id
+Ref: plan.planner_id > account.id
+
+Ref: plan_queue.plan_id > plan.id
