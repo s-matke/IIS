@@ -61,7 +61,12 @@ class PlanRetrieveDestroyViewSet(generics.RetrieveDestroyAPIView):
     serializer_class = PlanSerializer
 
     def get(self, request, *args, **kwargs):
-        planner_id = kwargs['pk']
+        if 'pk' in kwargs:
+            plans = Plan.objects.filter(id=kwargs['pk']).get()
+            plan_serializer = self.serializer_class(plans)
+            return Response(plan_serializer.data, status=status.HTTP_200_OK)
+
+        planner_id = kwargs['planner']
 
         plans = Plan.objects.filter(planner_id = planner_id)
 
@@ -73,9 +78,8 @@ class PlanRetrieveByStatusViewSet(generics.RetrieveAPIView):
     serializer_class = PlanSerializer
 
     def get(self, request, *args, **kwargs):
-        planner_id = kwargs['pk']
         plan_status = kwargs['status']
-        
+
         if plan_status == 'pending':
             plan_status = Plan.PlanStatus.PENDING
         elif plan_status == 'approved':
@@ -84,7 +88,14 @@ class PlanRetrieveByStatusViewSet(generics.RetrieveAPIView):
             plan_status = Plan.PlanStatus.DECLINED
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-
+        
+        if 'pk' not in kwargs:
+            plans = Plan.objects.filter(status = plan_status).order_by('start_date', 'end_date', 'producable_amount')
+            plan_serializer = self.serializer_class(plans, many=True)
+            return Response(plan_serializer.data, status=status.HTTP_200_OK)
+        
+        planner_id = kwargs['pk']
+        
         plans = Plan.objects.filter(planner_id = planner_id, status = plan_status).order_by('start_date', 'end_date', 'producable_amount')
         
         plan_serializer = self.serializer_class(plans, many=True)

@@ -18,7 +18,7 @@ import random
 
 class IsManager(permissions.BasePermission):
     def has_permission(self, request, view):
-        return request.user and request.user.groups.values_list('name', flat = True)[0] in ['Plan Manager', 'Inventory Manager']
+        return request.user and request.user.groups.values_list('name', flat = True)[0] in ['Plan Manager', 'Inventory Manager', 'Production Manager']
 
 class IsAdmin(permissions.BasePermission):
     def has_permission(self, request, view):

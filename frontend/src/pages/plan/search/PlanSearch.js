@@ -19,11 +19,26 @@ function PlanSearch() {
     const context = useContext(AuthContext);
 
     useEffect(()=>{
-        loadAllPlansForPlanner(); 
+        if (context.role == "Plan Manager") {
+            loadAllPlansForPlanner(); 
+        } else {
+            loadAllPlans();
+        }
     },[])
 
     const loadAllPlansForPlanner = async() => {
-        const result = await axios.get("http://localhost:8000/plan/" + context.user.id, {
+        const result = await axios.get("http://localhost:8000/plan/planner/" + context.user.id, {
+            headers: {
+                'Authorization': 'Bearer ' + context.token
+            }
+        })
+
+        setPlans(result.data)
+        setFilterData(result.data)
+    }
+
+    const loadAllPlans = async() => {
+        const result = await axios.get("http://localhost:8000/plan", {
             headers: {
                 'Authorization': 'Bearer ' + context.token
             }
@@ -34,7 +49,13 @@ function PlanSearch() {
     }
 
     const filterPlansByStatus = async(status) => {
-        const result = await axios.get("http://localhost:8000/plan/" + context.user.id + "/" + status, {
+        var url_opt = ""
+        if (context.role == "Plan Manager") {
+            url_opt = "http://localhost:8000/plan/" + context.user.id + "/" + status
+        } else {
+            url_opt = "http://localhost:8000/plan/" + status
+        }
+        const result = await axios.get(url_opt, {
             headers: {
                 'Authorization': 'Bearer ' + context.token
             }
@@ -79,7 +100,7 @@ function PlanSearch() {
         setCancelPlan(null)
     }
 
-    const handleRowClick = async (data) => {
+    const handleRowPlanManager = async (data) => {
         if (data['status'] !== "PENDING") {
             toast.warning("Can't cancel plans that are approved or declined!", {
                 position: toast.POSITION.TOP_RIGHT
@@ -88,15 +109,28 @@ function PlanSearch() {
         }
         setCancelPlan(data)
         setShow(true)
-        // const plan_id = data["id"]
+    }
 
-        
-        // navigate('/production/plan/' + plan_id,
-        // {
-        //   state: {
-        //     data
-        //   }
-        // })
+    const handleRowProductionManager = async (data) => {
+        if (data['status'] === 'PENDING') {
+            // navigate to createApprovalOrderPage
+            console.log(data)
+            navigate('/production/order/create/' + data['id'])
+        }
+        else {
+            toast.warning("Can't create order for plans that are not pending!", {
+                position: toast.POSITION.TOP_RIGHT
+            })
+            return;
+        }
+    }
+
+    const handleRowClick = async (data) => {
+        if (context.role == "Production Manager") {
+            handleRowProductionManager(data)
+        } else {
+            handleRowPlanManager(data)
+        }
     }
 
     const handleDelete = async () => {
@@ -126,6 +160,7 @@ function PlanSearch() {
   
     return (
         <div className='container'>
+            
             <Navbar bg="light" expand="lg">
                 <Container>
                     {/* <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand> */}

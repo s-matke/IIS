@@ -10,6 +10,20 @@ def before_or_after_workhour(time):
 
 
 def calculate_producable_amount_and_cost(start_date, end_date, product):
+    
+    # calculate total minutes between the two dates
+    total_minutes = calculate_total_minutes(start_date, end_date)
+
+    # total number of producable products within the timeframe
+    total_producable_amount = math.floor(total_minutes / float(product.lead_time))
+
+    # total cost of production
+    total_cost = round(total_producable_amount * float(product.price_of_producing), 2)
+
+    return total_producable_amount, total_cost
+
+
+def calculate_total_minutes(start_date, end_date):
     total_minutes = 0.0
 
     # open and close time for the production company
@@ -37,13 +51,7 @@ def calculate_producable_amount_and_cost(start_date, end_date, product):
     # their time of starting/ending
     total_minutes += minute_between_close_open * days_between_start_end
 
-    # total number of producable products within the timeframe
-    total_producable_amount = math.floor(total_minutes / float(product.lead_time))
-
-    # total cost of production
-    total_cost = round(total_producable_amount * float(product.price_of_producing), 2)
-
-    return total_producable_amount, total_cost    
+    return total_minutes
     
 
 def calculate_minutes(start, end):

@@ -12,7 +12,7 @@ from product.serializers import ProductSerializer
 
 class IsManager(permissions.BasePermission):
     def has_permission(self, request, view):
-        return request.user and (request.user.groups.values_list('name', flat = True)[0] in ['Inventory Manager', 'Plan Manager'])
+        return request.user and (request.user.groups.values_list('name', flat = True)[0] in ['Inventory Manager', 'Plan Manager', 'Production Manager'])
 
 class IsAdmin(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -59,6 +59,19 @@ class BillOfMaterialViewSet(APIView):
         boms = self.serializer_class(self.queryset.all(), many=True)
         return Response(boms.data, status=status.HTTP_200_OK)
         # return Response(test, status=status.HTTP_302_FOUND)
+
+class BillOfMaterialRetrieveViewSet(generics.RetrieveAPIView):
+    queryset = BillOfMaterial.objects.all()
+    serializer_class = BillOfMaterialSerializer
+
+    def get(self, request, *args, **kwargs):
+        p_id = kwargs['product']
+
+        boms = BillOfMaterial.objects.filter(product_id = p_id)
+
+        boms_serializer = self.serializer_class(boms, many=True)
+
+        return Response(boms_serializer.data, status=status.HTTP_200_OK)
 
 class MaterialRetrieveUpdateViewSet(generics.RetrieveUpdateAPIView):
     queryset = Material.objects.all()

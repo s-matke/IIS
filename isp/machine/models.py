@@ -1,5 +1,5 @@
 from django.db import models
-from production.models import ProductionOrder
+
 # Create your models here.
 class Machine(models.Model):
     name = models.CharField(max_length=50, null=False, blank=False)
@@ -10,9 +10,3 @@ class Machine(models.Model):
     produced_amount = models.PositiveBigIntegerField(null=False, blank=False, default=0)
     last_diagnosis = models.DateField(null=True, blank=True)
     purchase_date = models.DateField(auto_now_add=True)
-
-# class MachineWork(models.Model):
-#     machine = models.ForeignKey(Machine, on_delete=models.CASCADE)
-#     production_order = models.ForeignKey(ProductionOrder, on_delete=models.CASCADE)
-#     started = models.DateTimeField(auto_now_add=True)
-    

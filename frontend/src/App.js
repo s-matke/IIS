@@ -27,6 +27,7 @@ import PlanSearch from "./pages/plan/search/PlanSearch";
 import MachineCreate from "./pages/machine/create/MachineCreate";
 import MachineSearch from "./pages/machine/search/MachineSearch";
 import MachineUpdate from "./pages/machine/update/MachineUpdate";
+import ProductionCreate from "./pages/production/create/ProductionCreate";
 
 function App() {
   const context = useContext(AuthContext);
@@ -54,7 +55,7 @@ function App() {
             <Route path="/machine/update/:id" element={<MachineUpdate />}/>
           </Route>
           
-          <Route element={<ProtectedRoute isAllowed={context.isLoggedIn && (context.role == "Plan Manager" || context.role == "Inventory Manager" || context.role == "Admin" ) } />}>
+          <Route element={<ProtectedRoute isAllowed={context.isLoggedIn && (context.role == "Plan Manager" || context.role == "Inventory Manager" || context.role == "Admin" || context.role == "Production Manager") } />}>
             <Route path="/product/search" element={<ProductSearch />}/> 
             <Route path="/material/search" element={<MaterialSearch />}/>
             <Route path="/inventory/products" element={<ProductInventory />}/>
@@ -75,9 +76,10 @@ function App() {
             <Route path="/material/update/:id" element={<MaterialUpdate />}/>
           </Route>
 
-          <Route element={<ProtectedRoute isAllowed={context.isLoggedIn && context.role == "Plan Manager"} />}>
+          <Route element={<ProtectedRoute isAllowed={context.isLoggedIn && (context.role == "Plan Manager" || context.role == "Production Manager" )} />}>
             <Route path="/production/plan" element={<PlanCreate />}/>
             <Route path="/production/plan/search" element={<PlanSearch />}/>
+            <Route path="/production/order/create/:id" element={<ProductionCreate />} />
             {/* <Route path="/production/plan/:id" element={<PlanUpdate />}/> */}
           </Route>
         </Routes>

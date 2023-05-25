@@ -150,7 +150,7 @@ function MaterialUpdate() {
         <div className="container position-relative">
             <div className="row">
                 <div className="col-md-6 offset-md-4 border rounded p-4 mt-2 shadow position-relative">
-                    <h2 className="text-center m-5">Create Material</h2>
+                    <h2 className="text-center m-5">Update Material</h2>
                     <div className="mb-4">
                             <h5 style={{'width':'50%%', 'text-align':'center', 'border-bottom':'1px solid #000', 'line-height':'0.1em', 'margin':'10px 0 20px'}}>
                                 <span style={{'background':'#fff', 'padding':'0 5px'}}>Info about material</span></h5>

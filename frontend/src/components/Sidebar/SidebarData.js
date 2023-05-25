@@ -51,7 +51,7 @@ export const SidebarData = [
   },
   {
     title: "Production",
-    role: ['Worker', 'User', 'Plan Manager'],
+    role: ['Worker', 'User', 'Plan Manager', 'Production Manager'],
     icon: <FaIcons.FaUserCog />,
     iconClosed: <RiIcons.RiArrowDownSFill />,
     iconOpened: <RiIcons.RiArrowUpSFill />,
@@ -67,13 +67,13 @@ export const SidebarData = [
         title: "Search",
         path: "/production/plan/search",
         icon: <IoIcons.IoIosSearch />,
-        role: ['User', 'Worker', 'Plan Manager']
+        role: ['User', 'Worker', 'Plan Manager', 'Production Manager']
       },
     ],
   },
   {
     title: "Product",
-    role: ['Worker', 'Plan Manager', 'Inventory Manager', 'Admin'],
+    role: ['Worker', 'Plan Manager', 'Inventory Manager', 'Admin', 'Production Manager'],
     icon: <FaIcons.FaCarBattery />,
     iconClosed: <RiIcons.RiArrowDownSFill />,
     iconOpened: <RiIcons.RiArrowUpSFill />,
@@ -89,13 +89,13 @@ export const SidebarData = [
         title: "Search",
         path: "/product/search",
         icon: <IoIcons.IoIosSearch />,
-        role: ['User', 'Worker', 'Plan Manager', 'Inventory Manager', 'Admin']
+        role: ['User', 'Worker', 'Plan Manager', 'Inventory Manager', 'Admin', 'Production Manager']
       },
     ],
   },
   {
     title: "Material",
-    role: ['Worker', 'Plan Manager', 'Inventory Manager', 'Admin'],
+    role: ['Worker', 'Plan Manager', 'Inventory Manager', 'Admin', 'Production Manager'],
     icon: <FaIcons.FaTools />,
     iconClosed: <RiIcons.RiArrowDownSFill />,
     iconOpened: <RiIcons.RiArrowUpSFill />,
@@ -111,7 +111,7 @@ export const SidebarData = [
         title: "Search",
         path: "/material/search",
         icon: <IoIcons.IoIosSearch />,
-        role: ['User', 'Worker', 'Plan Manager', 'Inventory Manager', 'Admin']
+        role: ['User', 'Worker', 'Plan Manager', 'Inventory Manager', 'Admin', 'Production Manager']
       },
       {
         title: "Order",
@@ -123,7 +123,7 @@ export const SidebarData = [
   },
   {
     title: "Inventory",
-    role: ['Worker', 'Plan Manager', 'Inventory Manager', 'Admin'],
+    role: ['Worker', 'Plan Manager', 'Inventory Manager', 'Admin', 'Production Manager'],
     icon: <FaIcons.FaBoxes />,
     iconClosed: <RiIcons.RiArrowDownSFill />,
     iconOpened: <RiIcons.RiArrowUpSFill />,
@@ -133,13 +133,13 @@ export const SidebarData = [
         title: "Product",
         path: "/inventory/products",
         icon: <IoIcons.IoMdCreate />,
-        role: ['Plan Manager', 'Inventory Manager', 'Admin']
+        role: ['Plan Manager', 'Inventory Manager', 'Admin', 'Production Manager']
       },
       {
         title: "Material",
         path: "/inventory/materials",
         icon: <IoIcons.IoIosSearch />,
-        role: ['User', 'Worker', 'Plan Manager', 'Inventory Manager', 'Admin']
+        role: ['User', 'Worker', 'Plan Manager', 'Inventory Manager', 'Admin', 'Production Manager']
       },
     ],
   },
@@ -153,6 +153,6 @@ export const SidebarData = [
     title: "Sign Out",
     path: "/",
     cName: "nav-text",
-    role: ["Admin", "User", "Worker", "Plan Manager", 'Inventory Manager']
+    role: ["Admin", "User", "Worker", "Plan Manager", 'Inventory Manager', 'Production Manager']
 }
 ];
