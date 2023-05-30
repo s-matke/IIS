@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.db import transaction, DatabaseError
 from .helper import *
+from machine.models import MachineQueue
 
 # Create your views here.
 class ProductionOrderViewSet(viewsets.ModelViewSet):
@@ -19,9 +20,9 @@ class ProductionOrderAPIViewSet(APIView):
     serializer_class = ProductionOrderSerializer
 
     def get(self, request):
-        production_orders = self.queryset.all()
+        production_orders = self.queryset.all().order_by("state")
 
-        production_serializer = self.serializer_class(production_orders, many=True)
+        production_serializer = DetailedProductionOrderSerializer(production_orders, many=True)
 
         return Response(production_serializer.data, status=status.HTTP_200_OK)
     
@@ -32,20 +33,31 @@ class ProductionOrderAPIViewSet(APIView):
                 if not check_invetory_availability(plan.product, plan.producable_amount):
                     return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
                 
-                if not check_machine_availability(plan.start_date, plan.end_date):
-                    pass
-                return Response(status=status.HTTP_200_OK)
+                available_machine = find_available_machine(plan.start_date, plan.end_date, plan.id)
+
+                if available_machine:
+                    request.data['machine'] = available_machine.id
+                
+                production_serializer = self.serializer_class(data=request.data)                
+
+                if not production_serializer.is_valid():
+                    return Response(production_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                
+                production_serializer.save()
+
+                return Response(production_serializer.data, status=status.HTTP_201_CREATED)
         except:
-            print("Uff")
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        
-        # try:
-        #     with transaction.atomic():
-        #         print(request)
-        #         pass
-        # except:
-        #     pass
-        # pass
+    
+class ProductionOrderRetrieveByStateViewSet(generics.RetrieveAPIView):
+    queryset = ProductionOrder.objects.all()
+    serializer_class = DetailedProductionOrderSerializer
 
-    # def post(self, request):
+    def get(self, request, *args, **kwargs):
+        production_state = kwargs['state']
 
+        production_orders = ProductionOrder.objects.filter(state=production_state)
+
+        production_serializer = self.serializer_class(production_orders, many=True)
+
+        return Response(production_serializer.data, status=status.HTTP_200_OK)

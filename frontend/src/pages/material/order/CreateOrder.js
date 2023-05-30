@@ -65,7 +65,7 @@ function CreateOrder() {
             toast.success('Successfully sent order!', {
                 position: toast.POSITION.TOP_CENTER
             });
-            navigate("/inventory/materials")
+            // navigate("/inventory/materials")
         })
     }
 

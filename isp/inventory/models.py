@@ -2,6 +2,7 @@ from django.db import models
 from material.models import Material
 from order.models import Order
 from product.models import Product
+from production.models import ProductionOrder
 from django.db.models.signals import post_save, pre_delete, post_delete
 from django.dispatch import receiver
 

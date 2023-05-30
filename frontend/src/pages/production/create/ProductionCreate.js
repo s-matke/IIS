@@ -83,9 +83,16 @@ function ProductionCreate() {
                 navigate("/production/plan/search");
             })
             .catch(error => {
-                toast.error('Something went wrong!', {
-                    position: toast.POSITION.TOP_CENTER
-                })
+                if (error.response.status === 406) {
+                    toast.error("Not enough materials required for production.", {
+                        position: toast.POSITION.TOP_CENTER
+                    })
+                } else {
+
+                    toast.error('Something went wrong!', {
+                        position: toast.POSITION.TOP_CENTER
+                    })
+                }
                 console.log(error);
             })
     }

@@ -162,5 +162,7 @@ SIMPLE_JWT = {
 }
 
 CRONJOBS = [
-    ('*/5 * * * *', 'order.cron.check_order_delivery', '>> ' + str(BASE_DIR) + '/order_logger.log')
+    ('*/1 * * * *', 'order.cron.check_order_delivery', '>> ' + str(BASE_DIR) + '/logger/order_logger.log'),
+    ('*/1 * * * *', 'production.cron.check_pending_productions', '>> ' + str(BASE_DIR) + '/logger/pending_production.log'),
+    ('*/1 * * * *', 'production.cron.check_machine_availability', '>> ' + str(BASE_DIR) + '/logger/machineless_production.log'),
 ]

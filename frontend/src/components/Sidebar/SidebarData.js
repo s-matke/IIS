@@ -69,6 +69,12 @@ export const SidebarData = [
         icon: <IoIcons.IoIosSearch />,
         role: ['User', 'Worker', 'Plan Manager', 'Production Manager']
       },
+      {
+        title: "Order",
+        path: "/production/order/search",
+        icon: <IoIcons.IoMdCodeWorking/>,
+        role: ['Production Manager']
+      }
     ],
   },
   {
