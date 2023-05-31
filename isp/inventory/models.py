@@ -15,7 +15,7 @@ class MaterialInventory(models.Model):
 
 class ProductInventory(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=False)
-    quantity = models.PositiveBigIntegerField(null=False)
+    quantity = models.PositiveBigIntegerField(null=False, default=0)
 
 @receiver(post_save, sender=Material)
 def create_material_inventory(sender, instance, created, **kwargs):
@@ -36,3 +36,8 @@ def update_quantity(sender, instance, using, **kwags):
     material_inventory = MaterialInventory.objects.get(material=instance.material)
     material_inventory.quantity += instance.ordered_quantity
     material_inventory.save()
+
+@receiver(post_save, sender=Product)
+def create_product_inventory(sender, instance, created, **kwargs):
+    if created:
+        ProductInventory.objects.create(product = instance)

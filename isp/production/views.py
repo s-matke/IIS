@@ -7,7 +7,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.db import transaction, DatabaseError
 from .helper import *
-from machine.models import MachineQueue
 
 # Create your views here.
 class ProductionOrderViewSet(viewsets.ModelViewSet):

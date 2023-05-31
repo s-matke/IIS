@@ -5,6 +5,7 @@ from machine.models import Machine
 from django.utils.translation import gettext_lazy as _
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django.utils import timezone
 # Create your models here.
 
 class ProductionOrder(models.Model):
@@ -23,6 +24,20 @@ class ProductionOrder(models.Model):
     machine = models.ForeignKey(Machine, on_delete=models.SET_NULL, null=True, default=None)
     state = models.CharField(choices=ProductionStatus.choices, default=ProductionStatus.PENDING)
     # worker = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True)
+
+class ProductionProgress(models.Model):
+    production = models.ForeignKey(ProductionOrder, on_delete=models.CASCADE, null=False)
+    last_update = models.DateTimeField(auto_now_add=True)
+    daily_produced = models.PositiveIntegerField(default=0, null=False, blank=False)
+    produced_tracker = models.PositiveBigIntegerField(default=0, null=False, blank=False)
+    isMyEndNear = models.BooleanField(default=False, null=False, blank=False)
+
+@receiver(post_save, sender=ProductionOrder)
+def add_prodchine_to_queue(sender, instance, created, **kwargs):
+    if created:
+        if instance.machine is not None:
+            ProductionProgress.objects.create(production=instance)
+
 
 # @receiver(post_save, sender=ProductionOrder)
 # def update_plan_status(sender, instance, created, **kwargs):

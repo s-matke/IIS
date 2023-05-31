@@ -157,12 +157,15 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=100),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=300),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=100),   # change
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=300),  # change
 }
 
 CRONJOBS = [
-    ('*/1 * * * *', 'order.cron.check_order_delivery', '>> ' + str(BASE_DIR) + '/logger/order_logger.log'),
-    ('*/1 * * * *', 'production.cron.check_pending_productions', '>> ' + str(BASE_DIR) + '/logger/pending_production.log'),
+    ('*/5 * * * *', 'order.cron.check_order_delivery', '>> ' + str(BASE_DIR) + '/logger/order_logger.log'),
+    ('*/10 * * * *', 'production.cron.check_pending_productions', '>> ' + str(BASE_DIR) + '/logger/pending_production.log'),
     ('*/1 * * * *', 'production.cron.check_machine_availability', '>> ' + str(BASE_DIR) + '/logger/machineless_production.log'),
+    ('*/1 * * * *', 'production.cron.check_production_progress', '>> ' + str(BASE_DIR) + '/logger/production_progress.log'),
+    ('*/1 * * * *', 'production.cron.check_production_ending', '>> ' + str(BASE_DIR) + '/logger/production_ending.log'),
+    ('0 20 * * *', 'production.cron.reset_daily_produced_amount', '>> ' + str(BASE_DIR) + '/logger/daily_reset.log'),
 ]

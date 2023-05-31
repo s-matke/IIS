@@ -1,8 +1,4 @@
 from django.db import models
-from django.utils.translation import gettext_lazy as _
-from django.dispatch import receiver
-from django.db.models.signals import post_save, pre_save
-
 
 # Create your models here.
 class Machine(models.Model):
@@ -15,20 +11,20 @@ class Machine(models.Model):
     last_diagnosis = models.DateField(null=True, blank=True)
     purchase_date = models.DateField(auto_now_add=True)
 
-class MachineQueue(models.Model):
-    machine = models.ForeignKey(Machine, on_delete=models.CASCADE, null=False)
-    production = models.ForeignKey('production.ProductionOrder', on_delete=models.CASCADE, null=False)
-    last_update = models.DateTimeField(auto_now_add=True)
-    daily_produced = models.PositiveIntegerField(default=0, null=False, blank=False)
-    produced_tracker = models.PositiveBigIntegerField(default=0, null=False, blank=False)
-    isMyEndNear = models.BooleanField(default=False, null=False, blank=False)
+# class MachineQueue(models.Model):
+#     machine = models.ForeignKey(Machine, on_delete=models.CASCADE, null=False)
+#     production = models.ForeignKey('production.ProductionOrder', on_delete=models.CASCADE, null=False)
+#     last_update = models.DateTimeField(auto_now_add=True)
+#     daily_produced = models.PositiveIntegerField(default=0, null=False, blank=False)
+#     produced_tracker = models.PositiveBigIntegerField(default=0, null=False, blank=False)
+#     isMyEndNear = models.BooleanField(default=False, null=False, blank=False)
 
-    class Meta:
-        unique_together = ('machine', 'production')
+#     class Meta:
+#         unique_together = ('machine', 'production')
 
-@receiver(post_save, sender='production.ProductionOrder')
-def add_prodchine_to_queue(sender, instance, created, **kwargs):
-    if created:
-        if instance.machine is not None:
-            MachineQueue.objects.create(machine=instance.machine, production=instance)
+# @receiver(post_save, sender='production.ProductionOrder')
+# def add_prodchine_to_queue(sender, instance, created, **kwargs):
+#     if created:
+#         if instance.machine is not None:
+#             MachineQueue.objects.create(machine=instance.machine, production=instance)
 

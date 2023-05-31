@@ -32,7 +32,8 @@ function ProductionCreate() {
             end_date: "", // TODO: remove, used only for DEV testing
             planner: context.user.id,
             production_cost: "",
-            product_name: ""
+            product_name: "",
+            producable_amount: ""
         }
     )
   
@@ -101,6 +102,29 @@ function ProductionCreate() {
         setProduction({...production, [e.target.name]: e.target.value});
     }
 
+    const declinePlan = async (e) => {
+        e.preventDefault();
+
+        console.log("DECLINE")
+
+        // axios.delete(`http://localhost:8000/product/` + productId, {
+        //     headers: {
+        //       'Authorization': 'Bearer ' + context.token
+        //     }})
+        //     .then(res => {
+        //         toast.success('Successfully deleted product!', {
+        //             position: toast.POSITION.TOP_CENTER
+        //         });
+        //         navigate("/product/search");
+        //     })
+        //     .catch(error => {
+        //         toast.error('Something went wrong!', {
+        //             position: toast.POSITION.TOP_CENTER
+        //         })
+        //         console.log(error);
+        //     })
+    }
+
     console.log(production)
 
     return(
@@ -126,6 +150,23 @@ function ProductionCreate() {
                                     name="name"
                                     value={plan.product_name}
                                     // onChange={(e) => onInputChange(e)}
+                                    required
+                                    disabled
+                                    />
+                            </div>
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="price" className="form-label">
+                                Amount to produce:
+                            </label>
+                            <div className="input-group">
+                                <input
+                                    type={"number"}
+                                    min="0"
+                                    className="form-control"
+                                    placeholder="Amount..."
+                                    value={plan.producable_amount}
+                                    name="producable_amount"
                                     required
                                     disabled
                                     />
@@ -196,10 +237,21 @@ function ProductionCreate() {
                                     />
                             </div>
                         </div>
-                        <button type="submit" className="btn btn-outline-primary" 
+                        {/* <button type="submit" className="btn btn-outline-primary" 
                                 style={{'width':'150px', 'height':'50px', 'margin-left':'39%', 'margin-top':'15px'}}>
-                        Submit
-                        </button>
+                        Approve
+                        </button> */}
+                        <div class="overlay-right d-flex justify-content-center">
+                         {/* style={{'width':'150px', 'height':'50px', 'margin-left':'39%', 'margin-top':'15px'}}> */}
+                            <button type="submit" className="btn btn-outline-primary p-3 m-2">
+                                    
+                            Approve
+                            </button>
+                            <button type="button" onClick={declinePlan} className="btn btn-outline-danger p-3 m-2" 
+                                    >
+                            Decline
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
