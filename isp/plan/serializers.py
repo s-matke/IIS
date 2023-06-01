@@ -27,3 +27,9 @@ class PlanQueueSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlanQueue
         fields = ['id', 'plan', 'created'] 
+
+
+class PlanDeclineSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Plan
+        fields = ['id', 'status']

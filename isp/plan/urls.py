@@ -7,7 +7,8 @@ urlpatterns = [
     path(r'plan/planner/<int:planner>', PlanRetrieveDestroyViewSet.as_view()),
     path(r'plan/<int:pk>', PlanRetrieveDestroyViewSet.as_view()),
     path(r'plan/<int:pk>/<str:status>', PlanRetrieveByStatusViewSet.as_view()),
-    path(r'plan/<str:status>', PlanRetrieveByStatusViewSet.as_view())
+    path(r'plan/<str:status>', PlanRetrieveByStatusViewSet.as_view()),
+    path(r'plan/decline/<int:pk>', PlanDeclineUpdateViewSet.as_view())
 ]
 
 router = DefaultRouter()

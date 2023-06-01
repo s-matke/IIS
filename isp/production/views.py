@@ -60,3 +60,38 @@ class ProductionOrderRetrieveByStateViewSet(generics.RetrieveAPIView):
         production_serializer = self.serializer_class(production_orders, many=True)
 
         return Response(production_serializer.data, status=status.HTTP_200_OK)
+
+class ProductionCancelUpdateViewSet(generics.UpdateAPIView):
+    queryset = ProductionOrder.objects.all()
+    serializer_class = ProductionOrderSerializer
+
+    def put(self, request, *args, **kwargs):
+        try:
+            with transaction.atomic():
+                production_id = kwargs['pk']
+
+                production_to_cancel = ProductionOrder.objects.select_for_update(nowait=True).filter(id=production_id).get()
+
+                changed_data = {
+                    'state': ProductionOrder.ProductionStatus.CANCELLED
+                }
+
+                production_serializer = self.get_serializer(production_to_cancel, changed_data, partial = True)
+                production_serializer.is_valid(raise_exception = True)
+                self.perform_update(production_serializer)
+                
+                return Response(status=status.HTTP_200_OK)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class ProductionProgressRetrieveiewSet(generics.RetrieveAPIView):
+    queryset = ProductionProgress.objects.all()
+    serializer_class = ProductionProgressSerializer
+
+    def get(self, request, *args, **kwargs):
+
+        productions_progress = ProductionProgress.objects.filter(production__state = 'ACTIVE')
+
+        progress_serializer = self.serializer_class(productions_progress, many=True)
+
+        return Response(progress_serializer.data, status=status.HTTP_200_OK)

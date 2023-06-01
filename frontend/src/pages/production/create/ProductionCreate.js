@@ -105,7 +105,22 @@ function ProductionCreate() {
     const declinePlan = async (e) => {
         e.preventDefault();
 
-        console.log("DECLINE")
+        axios.put(`http://localhost:8000/plan/decline/` + planId, {
+            headers: {
+                'Authorization': 'Bearer ' + context.token
+            }
+        })
+        .then(res => {
+            toast.success('Declined the plan!', {
+                position: toast.POSITION.TOP_CENTER            
+            })
+            navigate('/production/plan/search')
+        })
+        .catch(error => {
+            toast.error('Something went wrong!', {
+                position: toast.POSITION.TOP_CENTER
+            })
+        })
 
         // axios.delete(`http://localhost:8000/product/` + productId, {
         //     headers: {

@@ -101,3 +101,28 @@ class PlanRetrieveByStatusViewSet(generics.RetrieveAPIView):
         plan_serializer = self.serializer_class(plans, many=True)
 
         return Response(plan_serializer.data, status=status.HTTP_200_OK)
+
+class PlanDeclineUpdateViewSet(generics.UpdateAPIView):
+    queryset = Plan.objects.all()
+    serializer_class = PlanDeclineSerializer
+
+    def put(self, request, *args, **kwargs):
+        try:
+            with transaction.atomic():
+                plan_id = kwargs['pk']
+
+                plan_to_update = Plan.objects.select_for_update(nowait=True).filter(id=plan_id).get()
+                
+                reqdata = {
+                    "status": 'DECLINED'
+                }
+
+                plan_serializer = self.get_serializer(plan_to_update, reqdata, partial = True)
+                plan_serializer.is_valid(raise_exception = True)
+                self.perform_update(plan_serializer)
+
+                return Response(status=status.HTTP_200_OK)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        

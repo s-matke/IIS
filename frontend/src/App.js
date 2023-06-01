@@ -29,6 +29,7 @@ import MachineSearch from "./pages/machine/search/MachineSearch";
 import MachineUpdate from "./pages/machine/update/MachineUpdate";
 import ProductionCreate from "./pages/production/create/ProductionCreate";
 import ProductionSearch from "./pages/production/search/ProductionSearch";
+import ProductionProgress from "./pages/production/search/ProductionProgress";
 
 function App() {
   const context = useContext(AuthContext);
@@ -86,6 +87,7 @@ function App() {
 
           <Route element={<ProtectedRoute isAllowed={context.isLoggedIn && context.role == "Production Manager"}/>}>
             <Route path="/production/order/search" element={<ProductionSearch/> }/>
+            <Route path="/production/order/progress" element={<ProductionProgress/> }/>
           </Route>
         </Routes>
       </BrowserRouter>

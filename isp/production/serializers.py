@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ProductionOrder
+from .models import *
 from plan.serializers import PlanSerializer
 from machine.serializers import MachineSerializer
 
@@ -15,15 +15,13 @@ class DetailedProductionOrderSerializer(serializers.ModelSerializer):
         model = ProductionOrder
         fields = ['id', 'plan', 'priority', 'machine', 'state']
 
-# class CustomProductionOrderSerializer(serializers.ModelSerializer):
-#     start_date = serializers.SerializerMethodField()
-#     end_date = serializers.SerializerMethodField()
-#     production_cost = serializers.SerializerMethodField()
-#     machine_name = serializers.SerializerMethodField()
+class ProductionProgressSerializer(serializers.ModelSerializer):
+    production = DetailedProductionOrderSerializer()
+    lead_time = serializers.SerializerMethodField()
 
-#     class Meta:
-#         model = ProductionOrder
-#         fields = ['id', 'plan', 'start_date', 'end_date', 'production_cost', 'machine_name', 'priority', 'state']
+    class Meta:
+        model = ProductionProgress
+        fields = ['id', 'production', 'last_update', 'daily_produced', 'produced_tracker', 'lead_time']
     
-#     def get_start_date(self, obj):
-#         plan
+    def get_lead_time(self, obj):
+        return obj.production.plan.product.lead_time if obj.production else None

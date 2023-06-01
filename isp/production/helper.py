@@ -7,7 +7,6 @@ from plan.helper import calculate_total_minutes
 from django.db.models import Q
 
 def check_invetory_availability(product, producable_amount):
-    print("inv avail")
     # materials = Material.objects.filter(billofmaterial__product_id=product)
     boms = BillOfMaterial.objects.filter(product_id=product)
 

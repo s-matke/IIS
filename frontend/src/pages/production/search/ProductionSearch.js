@@ -75,32 +75,37 @@ function ProductionSearch() {
     }
 
     const handleRowClick = async (data) => {
-        setCancelProductionOrder(data)
-        setShow(true)
+        console.log(data)
+        if (data['state'] !== 'CANCELLED' && data['state'] !== 'FINISHED') {
+            setCancelProductionOrder(data)
+            setShow(true)
+        } else {
+            toast.warning("Can't cancel finished or already cancelled orders!", {
+                position: toast.POSITION.TOP_RIGHT
+            })
+        }
     }
 
-    const handleDelete = async () => {
+    const handleCancel = async () => {
         console.log(cancelProductionOrder)
-
-        axios.delete('http://localhost:8000/plan/' + cancelProductionOrder.id, {
+        
+        axios.put(`http://localhost:8000/production/cancel/` + cancelProductionOrder.id, {
             headers: {
                 'Authorization': 'Bearer ' + context.token
             }
         })
         .then(res => {
-            console.log(res)
-            toast.success("Successfully cancelled the plan!", {
+            toast.success('Successfully cancelled the order!', {
                 position: toast.POSITION.TOP_RIGHT
             })
-            setProductionOrder((prevProductionOrders) => prevProductionOrders.filter((item) => item.id !== cancelProductionOrder.id));
+            loadAllOrders()
         })
         .catch(error => {
             toast.error('Something went wrong!', {
                 position: toast.POSITION.TOP_RIGHT
             })
-            console.log(error)
         })
-
+        
         setShow(false)
     }
   
@@ -165,7 +170,7 @@ function ProductionSearch() {
                 <Button variant="secondary" onClick={handleClose}>
                     No
                 </Button>
-                <Button variant="danger" onClick={handleDelete}>
+                <Button variant="danger" onClick={handleCancel}>
                     Yes
                 </Button>
                 </Modal.Footer>

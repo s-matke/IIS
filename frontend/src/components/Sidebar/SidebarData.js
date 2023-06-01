@@ -74,6 +74,12 @@ export const SidebarData = [
         path: "/production/order/search",
         icon: <IoIcons.IoMdCodeWorking/>,
         role: ['Production Manager']
+      },
+      {
+        title: "Progress",
+        path: "/production/order/progress",
+        icon: <FaIcons.FaBatteryHalf/>,
+        role: ['Production Manager']
       }
     ],
   },

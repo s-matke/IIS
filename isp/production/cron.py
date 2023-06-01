@@ -19,8 +19,7 @@ def check_pending_productions():
                                                                   start_date__lte = datetime.datetime.now()).values_list('id', flat=True)) \
                             .update(state=ProductionOrder.ProductionStatus.ACTIVE)
     if affected_rows:
-        print(time_log() + " Updated: " + str(affected_rows) + " rows of ProductionOrder to state: " + str(ProductionOrder.ProductionStatus.ACTIVE))
-    
+        print(time_log() + " [INFO] Updated: " + str(affected_rows) + " rows of ProductionOrder to state: " + str(ProductionOrder.ProductionStatus.ACTIVE))
 
 
 def check_machine_availability():
@@ -29,10 +28,11 @@ def check_machine_availability():
         machine = find_available_machine(production.plan.start_date, production.plan.end_date, production.plan.id)
 
         if machine:
-            print(time_log() + " Adding machine(id = " + str(machine.id) + ")  to production: " + str(production.id))
+            print(time_log() + " [INFO] Adding machine(id = " + str(machine.id) + ")  to production: " + str(production.id))
             ProductionOrder.objects.filter(id=production.id).update(machine=machine.id)
             ProductionProgress.objects.create(production=production)
-        
+
+
 def check_production_ending():
     try:
         with transaction.atomic():
@@ -54,6 +54,7 @@ def reset_daily_produced_amount():
             ProductionProgress.objects.filter(daily_produced__gt = 0).update(daily_produced = 0)            
     except:
         print(time_log() + " [ERROR] Something went wrong resetting daily produced amount!") 
+
 
 def check_production_progress():
     active_productions = ProductionProgress.objects.filter(production_id__in=ProductionOrder.objects.filter(state=ProductionOrder.ProductionStatus.ACTIVE).values_list('id', flat=True))
@@ -94,7 +95,3 @@ def check_production_progress():
                             print()
                 except:
                     print(time_log() + " [ERROR] Something went wrong updating inventory or production progress")
-
-
-
-
