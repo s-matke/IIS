@@ -7,6 +7,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.db import transaction, DatabaseError
 from .helper import *
+from .report import create_pdf
+from django.http import HttpResponse
 
 # Create your views here.
 class ProductionOrderViewSet(viewsets.ModelViewSet):
@@ -95,3 +97,21 @@ class ProductionProgressRetrieveiewSet(generics.RetrieveAPIView):
         progress_serializer = self.serializer_class(productions_progress, many=True)
 
         return Response(progress_serializer.data, status=status.HTTP_200_OK)
+
+class ProductionReportRetrieveViewSet(generics.RetrieveAPIView):
+    queryset = ProductionProgress.objects.all()
+    serializer_class = ProductionProgressSerializer
+
+    def get(self, request, *args, **kwargs):
+        print("PK: ", kwargs['pk'])
+
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="production_report.pdf"'
+
+        pdf_data = create_pdf(response, kwargs['pk'])
+        return response
+        # return FileResponse(pdf_data, as_attachment=True, filename='production_report.pdf')
+        # response = Response(pdf_data, content_type='application/pdf', status=status.HTTP_200_OK)
+        # response['Content-Disposition'] = 'attachment; filename="production_report.pdf"'
+
+        # return response

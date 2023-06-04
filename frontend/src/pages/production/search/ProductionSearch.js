@@ -79,11 +79,42 @@ function ProductionSearch() {
         if (data['state'] !== 'CANCELLED' && data['state'] !== 'FINISHED') {
             setCancelProductionOrder(data)
             setShow(true)
+        } else if (data['state'] === 'FINISHED') {
+            console.log("FINISHED")
+            downloadPDFReport(data)
         } else {
             toast.warning("Can't cancel finished or already cancelled orders!", {
                 position: toast.POSITION.TOP_RIGHT
             })
         }
+    }
+
+    const downloadPDFReport = async (data) => {
+        console.log(data)
+
+        axios({
+            url: "http://localhost:8000/production/report/" + data.id,
+            method: "GET",
+            responseType: "blob",
+        })
+        .then((response) => {
+            const url = window.URL.createObjectURL(new Blob([response.data]))
+
+            const link = document.createElement('a')
+            link.href = url
+            link.setAttribute('download', 'production_report.pdf')
+            document.body.appendChild(link)
+
+            // link.click()
+
+            window.open(link.href, '_blank');
+            link.parentNode.removeChild(link)
+            window.URL.revokeObjectURL(url)
+            
+        })
+        .catch((error) => {
+            console.log("Error: ", error)
+        })
     }
 
     const handleCancel = async () => {

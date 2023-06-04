@@ -36,7 +36,4 @@ def find_available_machine(start_date, end_date, plan_id):
         return None
 
     # return Machine.objects.exclude(id__in=ProductionOrderQueue.objects.values('machine')).count()
-
-
-
 #Machine.objects.exclude(id__in=ProductionOrder.objects.filter(plan__in=arr, machine__isnull=False).values('machine'))
