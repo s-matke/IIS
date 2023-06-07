@@ -1,14 +1,24 @@
 # create PDF report for production
 
 from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, HRFlowable, KeepInFrame
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, HRFlowable, KeepInFrame, ListFlowable, ListItem
 from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from io import BytesIO
 from production.models import ProductionOrder, ProductionProgress
+from inventory.models import ProductInventory, MaterialInventory
 from datetime import datetime
 from material.models import *
+
+text_style = ParagraphStyle(
+        "CustomStyle",
+        parent=getSampleStyleSheet()["Normal"],
+        fontName="Helvetica",
+        textColor=colors.black,
+        fontSize=8,
+        spaceAfter=10)
+
 
 def generate_gridless_table(production_order):
     planner = production_order.plan.planner.user.first_name + " " + production_order.plan.planner.user.last_name
@@ -56,7 +66,7 @@ def generate_table(data, available_width):
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 6),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        # ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
         ('BOTTOMPADDING', (0, 1), (-1, -1), 2),
         ('MAXWIDTH', (0, 0), (-1, -1), available_width),
     ]))
@@ -64,8 +74,9 @@ def generate_table(data, available_width):
     return table
 
 def get_product_info(available_width, product):
-    data = [['NAME', 'STATUS', 'LEAD TIME [min]', 'PRICE OF PRODUCING [€]', ''],
-            [product.name, product.status, str(float(product.lead_time)), str(float(product.price_of_producing))]]
+    inventory_quantity = "{:,}".format(ProductInventory.objects.filter(product=product).get().quantity)
+    data = [['NAME', 'STATUS', 'LEAD TIME [min]', 'PRICE OF PRODUCING [€]', 'INVENTORY'],
+            [product.name, product.status, str(float(product.lead_time)), str(float(product.price_of_producing)), inventory_quantity]]
 
     return generate_table(data, available_width)
 
@@ -92,14 +103,14 @@ def get_production_info(available_width, production):
     days_producing = (production.plan.end_date - production.plan.start_date).days
     total_cost = produced * float(production.plan.product.price_of_producing)
     approved_on = production.added_on.strftime('%d/%m/%Y')
-    info = [produced, total_cost, days_producing, approved_on]
+    info = [produced, "{:,}".format(total_cost), days_producing, approved_on]
 
     data.append(info)    
     
     return generate_table(data, available_width)
 
 def get_inventory_status(available_width, production_order):
-    data = [['MATERIAL', 'TOTAL QUANTITY', 'TOTAL COST [€]', '', '']]
+    data = [['MATERIAL', 'TOTAL QUANTITY', 'TOTAL COST [€]', 'REMAINING', '']]
 
     produced_amount = ProductionProgress.objects.filter(production = production_order).get().produced_tracker
     
@@ -109,11 +120,36 @@ def get_inventory_status(available_width, production_order):
 
     for bom in boms:
         total_quantity = produced_amount * float(bom.quantity)
-        info = [bom.material.name, int(total_quantity), total_quantity * float(bom.material.price)]
+        inventory_quantity = MaterialInventory.objects.filter(material=bom.material).get().quantity
+        info = [bom.material.name, int(total_quantity), "{:,}".format(total_quantity * float(bom.material.price)), "{:,}".format(inventory_quantity)]
         data.append(info)
-
-
+    
     return generate_table(data, available_width)
+
+def product_text_info(product):
+    today = datetime.now().strftime('%d %b, %Y')
+    created = product.created.strftime('%d %b, %Y')
+    product_inventory_quantity = str(ProductInventory.objects.filter(product=product).get().quantity)
+    ret = "Report created for production of product: <u><b>" + product.name + "</b></u>. The cost of producing one unit is <b>" + str(product.price_of_producing) + "€</b>, with the time of producing being <b> " + str(product.lead_time) + " minutes</b>. "
+    status = "IN PRODUCTION" if product.status == Product.ProductStatus.IN_PRODUCTION else "OUT OF PRODUCTION"
+    since = ""
+    if product.status == Product.ProductStatus.IN_PRODUCTION:
+        since = "since <b>" + created + "</b>"
+    ret += "The product is <b>" + status + "</b> " + since + ". As of <u>" + today + "</u> the current inventory status of this product indicates a quantity of <b>" + product_inventory_quantity + "</b> units available.<br/><br/>"
+    ret += "Table overview of the above information:"
+
+    return ret 
+
+# def get_text_style():
+#     text_style = ParagraphStyle(
+#         "CustomStyle",
+#         parent=getSampleStyleSheet()["Normal"],
+#         fontName="Helvetica",
+#         textColor=colors.black,
+#         fontSize=8,
+#         spaceAfter=10,
+#     )
+#     return text_style
 
 # Function to create the PDF document
 def create_pdf(content, production_id):
@@ -141,42 +177,61 @@ def create_pdf(content, production_id):
     # Create a list to hold the elements of the PDF document
     elements = []
 
-    # Add the heading above the table
+    # TITLE
+    # of the report
     styles = getSampleStyleSheet()
     title = Paragraph("<b>Production Report</b>", styles["Title"])
     elements.append(title)
 
+    # HORIZONTAL LINE
+    # below the title in the document
     horiz_line = HRFlowable(width="100%")
     elements.append(Spacer(1, 0.1 * inch))
     elements.append(horiz_line)
 
+    # GRIDLESS TABLE
+    # information regarding managers
     elements.append(gridless_table)
+    elements.append(Spacer(1, 0.1 * inch))
 
-    heading = Paragraph("<b>Product Information</b>", styles["Heading3"])
-    elements.append(heading)
+    # PRODUCT INFORMATION TEXT
+    # basic information regarding the product
+    product_text = product_text_info(production_order.plan.product)
+    par = Paragraph(product_text, text_style)
+    elements.append(par)
+    # elements.append(Spacer(1, 0.1 * inch))
+
+    # heading = Paragraph("<b>Product Information</b>", styles["Heading3"])
+    # elements.append(heading)
 
     # Add a spacer below the heading
-    elements.append(Spacer(1, 0.1 * inch))
+    # elements.append(Spacer(1, 0.1 * inch))
 
     # Add the table to the document
     elements.append(product_frame)
 
-    elements.append(Spacer(1, 0.1 * inch))
+    # elements.append(Spacer(1, 0.1 * inch))
 
+    # MATERIAL INFORMATION HEADING
     heading = Paragraph("<b>Materials Information</b>", styles["Heading3"])
     elements.append(heading)
-
+    
+    # MATERIAL INFORMATION TABLE
     elements.append(material_frame)
-
     elements.append(Spacer(1, 0.1 * inch))
     
-    heading = Paragraph("<b>Inventory Status</b>", styles["Heading3"])
+    # INVENTORY STATUS HEADING
+    heading = Paragraph("<b>Inventory and production information for materials</b>", styles["Heading4"])
     elements.append(heading)
+
+    # INVENTORY STATUS TABLE
     elements.append(inventory_frame)
     
+    # PRODUCTION INFORMATION HEADING
     heading = Paragraph("<b>Production Information</b>", styles["Heading3"])
     elements.append(heading)
 
+    # PRODUCTION INFORMATION TABLE
     elements.append(production_frame)
 
     # Build the PDF document
